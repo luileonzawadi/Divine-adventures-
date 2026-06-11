@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Choose Payment Method | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); background-color: var(--color-gray-50); min-height: calc(100vh - var(--navbar-height));">
+  <div class="container" style="max-width: 700px;">
+    <!-- Wizard Step Indicator -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-8); position: relative;">
+      <div style="position: absolute; top: 12px; left: 0; right: 0; height: 2px; background-color: var(--color-gray-200); z-index: 1;"></div>
+      <div style="position: absolute; top: 12px; left: 0; width: 100%; height: 2px; background-color: var(--color-burnt-orange); z-index: 2;"></div>
+      
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Date & Spots</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Details</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Summary</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-burnt-orange); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">4</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-burnt-orange);">Payment</span>
+      </div>
+    </div>
+
+    <!-- Booking details panel -->
+    <div class="card" style="padding: var(--space-6); margin-bottom: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-200);">
+      <h3 style="font-size: var(--text-lg); color: var(--color-forest-dark); margin-bottom: var(--space-4); font-family: var(--font-heading);">
+        Payment Summary for Booking Ref: <span class="text-accent">{{ booking.booking_reference }}</span>
+      </h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); font-size: var(--text-sm);">
+        <div>
+          <span style="color: var(--color-text-muted);">Adventure:</span>
+          <strong style="display: block; color: var(--color-gray-800);">{{ booking.tour.title }}</strong>
+        </div>
+        <div>
+          <span style="color: var(--color-text-muted);">Traveler:</span>
+          <strong style="display: block; color: var(--color-gray-800);">{{ booking.traveler_name }}</strong>
+        </div>
+        <div>
+          <span style="color: var(--color-text-muted);">Total Cost:</span>
+          <strong style="display: block; color: var(--color-gray-800);">
+            KES {{ booking.total_price_kes|round|int|format }} / USD {{ booking.total_price_usd|round|int|format }}
+          </strong>
+        </div>
+        <div>
+          <span style="color: var(--color-text-muted);">Deposit Required ({{ booking.tour.deposit_percent }}%):</span>
+          <strong style="display: block; color: var(--color-forest); font-size: var(--text-base);">
+            KES {{ booking.deposit_amount_kes|round|int|format }} / USD {{ booking.deposit_amount_usd|round|int|format }}
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Choice Card -->
+    <div class="card" style="padding: var(--space-8); box-shadow: var(--shadow-lg); border: 1px solid var(--color-gray-200);">
+      <span class="section-subtitle">Secure Gateway</span>
+      <h2 style="margin-bottom: var(--space-2);">Choose Payment Method</h2>
+      <p style="color: var(--color-text-muted); margin-bottom: var(--space-6);">Select your preferred method to complete your deposit and confirm your adventure.</p>
+
+      <form action="{{ url_for('payments.pay_booking', booking_ref=booking.booking_reference) }}" method="POST" id="payment-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Option Container -->
+        <div style="display: grid; gap: var(--space-4); margin-bottom: var(--space-8);">
+          <!-- M-Pesa Option -->
+          <label style="border: 2px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; align-items: flex-start; gap: var(--space-4); cursor: pointer; transition: all var(--transition-base);" id="label-mpesa">
+            <input type="radio" name="payment_method" value="mpesa" style="margin-top: 4px; accent-color: var(--color-forest);" required onclick="toggleMethod('mpesa')">
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1);">
+                <strong style="font-family: var(--font-heading); color: var(--color-forest-dark); font-size: var(--text-base);">M-Pesa Daraja</strong>
+                <span style="font-weight: bold; color: var(--color-forest);">KES {{ booking.deposit_amount_kes|round|int|format }}</span>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 0;">Pay instantly using M-Pesa STK Push. Enter your Safaricom number and approve the prompt on your phone.</p>
+              
+              <!-- Expandable Phone Field -->
+              <div id="mpesa-phone-field" style="margin-top: var(--space-4); display: none;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" for="phone_number" style="font-size: var(--text-xs); font-weight: 600;">Safaricom Mobile Number</label>
+                  <input type="tel" id="phone_number" name="phone_number" class="form-input" placeholder="e.g. 0712345678 or 254712345678" value="{{ booking.traveler_phone }}">
+                  <small style="color: var(--color-text-muted); font-size: var(--text-xs); display: block; margin-top: 4px;">Must start with 07, 01, or 254.</small>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <!-- Stripe Card Option -->
+          <label style="border: 2px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-5); display: flex; align-items: flex-start; gap: var(--space-4); cursor: pointer; transition: all var(--transition-base);" id="label-stripe">
+            <input type="radio" name="payment_method" value="stripe" style="margin-top: 4px; accent-color: var(--color-forest);" onclick="toggleMethod('stripe')">
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1);">
+                <strong style="font-family: var(--font-heading); color: var(--color-forest-dark); font-size: var(--text-base);">International Credit / Debit Cards</strong>
+                <span style="font-weight: bold; color: var(--color-forest);">USD {{ booking.deposit_amount_usd|round|int|format }}</span>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 0;">Secure online payment via Stripe Checkout. Supports Visa, Mastercard, American Express (USD/GBP/EUR).</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Submit actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline-dark">
+            Cancel & Exit
+          </a>
+          
+          <button type="submit" class="btn btn--primary" style="background: linear-gradient(135deg, var(--color-burnt-orange), var(--color-burnt-orange-dark)); color: white;">
+            Proceed to Secure Payment &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleMethod(method) {
+    const mpesaField = document.getElementById('mpesa-phone-field');
+    const labelMpesa = document.getElementById('label-mpesa');
+    const labelStripe = document.getElementById('label-stripe');
+    const phoneInput = document.getElementById('phone_number');
+
+    if (method === 'mpesa') {
+      mpesaField.style.display = 'block';
+      phoneInput.setAttribute('required', 'required');
+      labelMpesa.style.borderColor = 'var(--color-forest)';
+      labelMpesa.style.backgroundColor = 'rgba(27, 67, 50, 0.02)';
+      labelStripe.style.borderColor = 'var(--color-gray-200)';
+      labelStripe.style.backgroundColor = 'transparent';
+    } else {
+      mpesaField.style.display = 'none';
+      phoneInput.removeAttribute('required');
+      labelStripe.style.borderColor = 'var(--color-forest)';
+      labelStripe.style.backgroundColor = 'rgba(27, 67, 50, 0.02)';
+      labelMpesa.style.borderColor = 'var(--color-gray-200)';
+      labelMpesa.style.backgroundColor = 'transparent';
+    }
+  }
+</script>
+{% endblock %}

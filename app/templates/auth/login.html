@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Log In — Devine Adventures{% endblock %}
+
+{% block head %}
+<style>.page-enter { animation: none; }</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-scene"
+     style="background-image: url('https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=1600&q=80');">
+  <div class="auth-scene__overlay"></div>
+
+  <div class="auth-modal">
+
+    <div class="auth-modal__header">
+      <div class="auth-modal__eyebrow">Welcome back</div>
+      <h2 class="auth-modal__title">Log in</h2>
+      <p class="auth-modal__sub">Continue your adventure</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('main.login') }}" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="email">Email</label>
+        <input class="auth-modal__input" type="email" id="email" name="email"
+               placeholder="you@example.com" required autofocus autocomplete="email">
+      </div>
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="password">Password</label>
+        <input class="auth-modal__input" type="password" id="password" name="password"
+               placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+
+      <label class="auth-modal__remember">
+        <input type="checkbox" name="remember">
+        <span>Remember me</span>
+      </label>
+
+      <button type="submit" class="auth-modal__submit">Log In</button>
+    </form>
+
+    <div class="auth-modal__footer">
+      No account yet?
+      <a href="{{ url_for('main.register') }}">Sign up free</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

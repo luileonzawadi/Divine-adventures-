@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Operator control Panel | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); min-height: 80vh; background-color: var(--color-gray-50);">
+  <div class="container">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4);">
+      <div>
+        <span class="section-subtitle">Management Console</span>
+        <h2>{{ profile.company_name }} Dashboard</h2>
+        <p style="color: var(--color-text-muted);">Configure active tours, review capacities, and track traveler check-ins.</p>
+      </div>
+      <div>
+        <a href="#" class="btn btn--primary" style="background: var(--color-forest);">
+          + Create New Tour
+        </a>
+      </div>
+    </div>
+
+    <!-- Revenue / Stats widgets -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-bottom: var(--space-10);" class="grid--3">
+      <!-- Confirmed Bookings Count -->
+      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-forest);">
+        <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Confirmed Bookings</span>
+        <div style="font-size: var(--text-3xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
+          {{ total_bookings }}
+        </div>
+      </div>
+      
+      <!-- Revenue KES -->
+      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-burnt-orange);">
+        <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Gross Revenue (KES)</span>
+        <div style="font-size: var(--text-2xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
+          KES {{ revenue_kes|round|int|format }}
+        </div>
+      </div>
+
+      <!-- Revenue USD -->
+      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-gold);">
+        <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Gross Revenue (USD)</span>
+        <div style="font-size: var(--text-2xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
+          USD {{ revenue_usd|round|int|format }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Tour Listings Management -->
+    <h3 style="font-size: var(--text-2xl); margin-bottom: var(--space-4); color: var(--color-forest-dark);">Your Tour Listings</h3>
+    
+    <div style="display: grid; gap: var(--space-6);">
+      {% for t in tours %}
+        <div class="card" style="padding: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--color-gray-200); padding-bottom: var(--space-4); margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-2);">
+            <div>
+              <span class="badge badge--category" style="margin-bottom: var(--space-2);">{{ t.category|capitalize }}</span>
+              <h4 style="margin: 0; color: var(--color-forest-dark); font-size: var(--text-xl);">{{ t.title }}</h4>
+              <p style="margin: 4px 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">
+                Location: {{ t.location }} &bull; Max Group: {{ t.max_group_size }} &bull; Duration: {{ t.duration_days }} Days
+              </p>
+            </div>
+            <div style="display: flex; gap: var(--space-2);">
+              <a href="#" class="btn btn--outline-dark btn--sm">Edit Tour</a>
+            </div>
+          </div>
+
+          <!-- Departure Dates of Tour -->
+          <h5 style="color: var(--color-text-muted); font-size: var(--text-sm); font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">
+            Active Departures & Manifests
+          </h5>
+          
+          <div style="display: grid; gap: var(--space-3);">
+            {% for d in t.dates.all() %}
+              <div style="display: flex; justify-content: space-between; align-items: center; background-color: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); flex-wrap: wrap; gap: var(--space-2);">
+                <div>
+                  <strong>🗓️ {{ d.start_date.strftime('%b %d, %Y') }} - {{ d.end_date.strftime('%b %d, %Y') }}</strong>
+                  <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-left: var(--space-4);">
+                    Capacity: {{ d.current_bookings }} booked / {{ d.max_capacity }} max
+                  </span>
+                </div>
+                
+                <div style="display: flex; gap: var(--space-3); align-items: center;">
+                  <!-- Availability Indicator -->
+                  {% if d.is_sold_out %}
+                    <span class="badge badge--extreme">Sold Out</span>
+                  {% else %}
+                    <span class="badge badge--easy">{{ d.spots_available }} spots left</span>
+                  {% endif %}
+                  
+                  <a href="{{ url_for('operator.manifest', date_id=d.id) }}" class="btn btn--secondary btn--sm">
+                    Passenger List &rarr;
+                  </a>
+                </div>
+              </div>
+            {% else %}
+              <p style="font-size: var(--text-sm); color: var(--color-text-muted); font-style: italic;">No departure dates scheduled for this tour.</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <div style="text-align: center; padding: var(--space-12); background-color: var(--color-white); border-radius: var(--radius-xl); border: 2px dashed var(--color-gray-200);">
+          <h4>No Tour Listings Found</h4>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-6);">Get started by creating your first adventure list.</p>
+          <a href="#" class="btn btn--primary">Create Tour</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

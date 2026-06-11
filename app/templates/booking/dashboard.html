@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Traveler Dashboard | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); min-height: 80vh; background-color: var(--color-gray-50);">
+  <div class="container">
+    <div style="margin-bottom: var(--space-8);">
+      <span class="section-subtitle">Manage Account</span>
+      <h2>Traveler Dashboard</h2>
+      <p style="color: var(--color-text-muted);">View details, print receipts, or cancel your upcoming scheduled departures.</p>
+    </div>
+
+    <!-- Active Bookings -->
+    <h3 style="font-size: var(--text-2xl); margin-bottom: var(--space-4); color: var(--color-forest-dark);">Upcoming Departures</h3>
+    
+    <div style="display: grid; gap: var(--space-5); margin-bottom: var(--space-10);">
+      {% for b in bookings %}
+        <div class="card" style="padding: var(--space-6); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: var(--space-4);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-2);">
+            <div>
+              <span style="font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-heading); font-weight: bold; text-transform: uppercase;">
+                Reference: {{ b.booking_reference }}
+              </span>
+              <h4 style="margin: var(--space-1) 0; color: var(--color-forest);"><a href="#">{{ b.tour.title }}</a></h4>
+              <p style="font-size: var(--text-sm); color: var(--color-text-muted); margin: 0;">
+                Departure: <strong>{{ b.tour_date.start_date.strftime('%B %d, %Y') }}</strong> &bull; Location: {{ b.tour.location }}
+              </p>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1);">
+              <span class="badge {{ b.status_color }}">{{ b.status }}</span>
+              <strong style="color: var(--color-forest-dark); font-size: var(--text-base); margin-top: 4px;">
+                KES {{ b.total_price_kes|round|int|format }} / USD {{ b.total_price_usd|round|int|format }}
+              </strong>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--color-gray-200); padding-top: var(--space-4); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+            <div style="font-size: var(--text-sm); color: var(--color-text-muted);">
+              Traveler: <strong>{{ b.traveler_name }}</strong> ({{ b.num_guests }} spot{{ 's' if b.num_guests > 1 else '' }})
+            </div>
+            
+            <div style="display: flex; gap: var(--space-3);">
+              {% if b.is_cancellable %}
+                <form action="{{ url_for('bookings.cancel_booking', booking_ref=b.booking_reference) }}" method="POST" 
+                      onsubmit="return confirm('Are you absolutely sure you want to cancel this booking? Spots will release immediately.');">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn--sm" style="border: 2px solid var(--color-danger); color: var(--color-danger); border-radius: var(--radius-md);">
+                    Cancel Booking
+                  </button>
+                </form>
+              {% endif %}
+              
+              <a href="{{ url_for('bookings.booking_success', booking_ref=b.booking_reference) }}" class="btn btn--secondary btn--sm">
+                View Receipt
+              </a>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div style="text-align: center; padding: var(--space-12); background-color: var(--color-white); border-radius: var(--radius-xl); border: 2px dashed var(--color-gray-200);">
+          <span style="font-size: 2.5rem; display: block; margin-bottom: var(--space-3);">🎒</span>
+          <h4>No Upcoming Adventures Found</h4>
+          <p style="color: var(--color-text-muted); margin-bottom: var(--space-6);">Explore our tours catalog and find your next journey.</p>
+          <a href="#" class="btn btn--primary">Find Adventures</a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Waitlists Subscriptions -->
+    <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-4); color: var(--color-forest-dark);">Joined Waitlists</h3>
+    <div style="display: grid; gap: var(--space-4); max-width: 800px;">
+      {% for w in waitlist %}
+        <div class="card" style="padding: var(--space-4) var(--space-6); display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); border-left: 4px solid var(--color-burnt-orange);">
+          <div>
+            <h4 style="margin: 0; color: var(--color-forest-dark);">{{ w.tour_date.tour.title }}</h4>
+            <span style="font-size: var(--text-xs); color: var(--color-text-muted);">
+              Departure Date: {{ w.tour_date.start_date.strftime('%B %d, %Y') }}
+            </span>
+          </div>
+          <div>
+            {% if w.is_notified %}
+              <span class="badge badge--easy">Notified (Spot Opened)</span>
+            {% else %}
+              <span class="badge badge--moderate">Waiting for Opening</span>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <p style="color: var(--color-text-muted); font-size: var(--text-sm);">You are not registered on any waitlists.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Stripe Checkout Simulation | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); background-color: var(--color-gray-100); min-height: calc(100vh - var(--navbar-height)); display: flex; align-items: center;">
+  <div class="container" style="max-width: 850px;">
+    
+    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-6); background-color: var(--color-white); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-2xl); border: 1px solid var(--color-gray-200);">
+      
+      <!-- Left: Payment details and inputs -->
+      <div style="padding: var(--space-8);">
+        <!-- Back to merchant -->
+        <a href="{{ url_for('payments.pay_booking', booking_ref=booking.booking_reference) }}" style="font-size: var(--text-sm); color: var(--color-gray-500); display: inline-flex; align-items: center; gap: 4px; margin-bottom: var(--space-6);">
+          &larr; Back to Devine Adventures
+        </a>
+
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: var(--space-6);">
+          <span style="font-size: 1.5rem;">💳</span>
+          <h2 style="font-size: var(--text-xl); font-family: var(--font-heading); margin-bottom: 0;">Stripe Checkout</h2>
+        </div>
+
+        <form action="{{ url_for('payments.mock_stripe_checkout', booking_ref=booking.booking_reference) }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          <!-- Card Details -->
+          <div class="form-group">
+            <label class="form-label" for="card_email" style="font-size: var(--text-xs); text-transform: uppercase;">Email Address</label>
+            <input type="email" id="card_email" class="form-input" required value="{{ booking.traveler_email }}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="card_number" style="font-size: var(--text-xs); text-transform: uppercase;">Card Information</label>
+            <div style="position: relative;">
+              <input type="text" id="card_number" class="form-input" placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242" required style="padding-right: 40px;">
+              <span style="position: absolute; right: 10px; top: 12px; font-size: 1.2rem;">💳</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="card_expiry" style="font-size: var(--text-xs); text-transform: uppercase;">MM / YY</label>
+              <input type="text" id="card_expiry" class="form-input" placeholder="12/29" value="12/29" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="card_cvc" style="font-size: var(--text-xs); text-transform: uppercase;">CVC</label>
+              <input type="text" id="card_cvc" class="form-input" placeholder="123" value="123" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="card_name" style="font-size: var(--text-xs); text-transform: uppercase;">Cardholder Name</label>
+            <input type="text" id="card_name" class="form-input" placeholder="John Doe" value="{{ booking.traveler_name }}" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="card_country" style="font-size: var(--text-xs); text-transform: uppercase;">Country or Region</label>
+            <input type="text" id="card_country" class="form-input" placeholder="United States" value="{{ booking.traveler_nationality }}" required>
+          </div>
+
+          <!-- Sandbox note -->
+          <div style="background-color: #FFF3CD; border-left: 4px solid #FFC107; padding: var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-xs); color: #856404; margin-bottom: var(--space-6);">
+            <strong>Sandbox Mode:</strong> Clicking the pay button below will bypass real payment networks and fire a mock webhook event to confirm this booking.
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn--primary btn--full" style="padding: var(--space-4); font-size: var(--text-base); background: linear-gradient(135deg, #635bff, #543bdb); border-color: transparent; box-shadow: 0 4px 15px rgba(99, 91, 255, 0.3); color: white;">
+            Pay USD {{ booking.deposit_amount_usd|round|int|format }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Right: Summary of payment -->
+      <div style="background-color: var(--color-gray-50); padding: var(--space-8); border-left: 1px solid var(--color-gray-200); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <!-- Company brand -->
+          <div style="font-weight: 800; font-size: var(--text-lg); margin-bottom: var(--space-8); color: var(--color-forest);">
+            Devine<span style="color: var(--color-burnt-orange);">Adventures</span>
+          </div>
+
+          <span style="color: var(--color-text-muted); font-size: var(--text-xs); text-transform: uppercase; font-weight: 600;">Tour Deposit</span>
+          <h1 style="font-size: var(--text-3xl); font-family: var(--font-heading); color: var(--color-forest-dark); margin-top: 4px; margin-bottom: var(--space-6);">
+            USD {{ booking.deposit_amount_usd|round|int|format }}
+          </h1>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm);">
+              <span style="color: var(--color-text-muted);">{{ booking.tour.title }}</span>
+              <strong style="color: var(--color-gray-800);">USD {{ booking.total_price_usd|round|int|format }}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); border-top: 1px solid var(--color-gray-200); padding-top: var(--space-3);">
+              <span style="color: var(--color-text-muted);">Guests:</span>
+              <strong style="color: var(--color-gray-800);">{{ booking.num_guests }} Traveler(s)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); border-top: 1px solid var(--color-gray-200); padding-top: var(--space-3);">
+              <span style="color: var(--color-text-muted);">Deposit Due ({{ booking.tour.deposit_percent }}%):</span>
+              <strong style="color: var(--color-gray-800);">USD {{ booking.deposit_amount_usd|round|int|format }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: var(--text-xs); color: var(--color-text-muted); text-align: center;">
+          Powered by <strong style="color: var(--color-gray-800);">stripe</strong> | Secure TLS Verified
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+</section>
+{% endblock %}

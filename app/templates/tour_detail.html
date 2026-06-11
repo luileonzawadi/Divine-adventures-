@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ tour.title }} | {{ site_name }}{% endblock %}
+{% block meta_description %}{{ tour.short_description or tour.description[:160] }}{% endblock %}
+
+{% block content %}
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section style="
+  position: relative;
+  height: 70vh;
+  min-height: 500px;
+  background-image: url('{{ tour.cover_image_url or 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80' }}');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+">
+  <div style="position:absolute; inset:0; background: linear-gradient(180deg, rgba(13,40,24,0.2) 0%, rgba(13,40,24,0.85) 100%);"></div>
+  <div class="container" style="position:relative; z-index:2; padding-bottom: var(--space-12);">
+    <div style="display:flex; align-items:center; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap:wrap;">
+      <span class="badge badge--category">{{ tour.category | replace('_', ' ') | title }}</span>
+      <span class="badge {{ tour.difficulty_color }}">{{ tour.difficulty | title }}</span>
+      {% if tour.is_featured %}<span class="badge badge--featured">Featured</span>{% endif %}
+    </div>
+    <h1 style="color: var(--color-white); font-size: var(--text-5xl); margin-bottom: var(--space-4);">{{ tour.title }}</h1>
+    <div style="display:flex; align-items:center; gap: var(--space-6); color: rgba(255,255,255,0.85); font-size: var(--text-sm); flex-wrap:wrap;">
+      <span>{{ tour.location }}</span>
+      <span>{{ tour.duration_days }} day{{ 's' if tour.duration_days != 1 }}</span>
+      <span>Up to {{ tour.max_group_size }} people</span>
+      {% if avg_rating > 0 %}
+      <span style="color: var(--color-gold);">★ {{ avg_rating }} <span style="color:rgba(255,255,255,0.7);">({{ review_count }} review{{ 's' if review_count != 1 }})</span></span>
+      {% endif %}
+      <span>★ {{ tour.operator.company_name }}</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     MAIN CONTENT + SIDEBAR
+     ============================================ -->
+<section class="section" style="background: var(--color-gray-50);">
+  <div class="container">
+    <div style="display:grid; grid-template-columns: 1fr 360px; gap: var(--space-10); align-items:start;">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex; flex-direction:column; gap: var(--space-8);">
+
+        <!-- Overview -->
+        <div class="card" style="padding: var(--space-8);">
+          <h3 style="margin-bottom: var(--space-5);">About This Tour</h3>
+          <p style="color: var(--color-text-muted); line-height: 1.9; white-space: pre-line;">{{ tour.description }}</p>
+
+          {% if tour.included_list or tour.excluded_list %}
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--space-6); margin-top: var(--space-8);">
+            {% if tour.included_list %}
+            <div>
+              <h5 style="color: var(--color-forest); margin-bottom: var(--space-4);">What's Included</h5>
+              <ul style="display:flex; flex-direction:column; gap: var(--space-2);">
+                {% for item in tour.included_list %}
+                <li style="font-size: var(--text-sm); color: var(--color-text-muted); display:flex; align-items:flex-start; gap: var(--space-2);">
+                  <span style="color: var(--color-success); flex-shrink:0;">✓</span> {{ item }}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            {% if tour.excluded_list %}
+            <div>
+              <h5 style="color: var(--color-forest); margin-bottom: var(--space-4);">Not Included</h5>
+              <ul style="display:flex; flex-direction:column; gap: var(--space-2);">
+                {% for item in tour.excluded_list %}
+                <li style="font-size: var(--text-sm); color: var(--color-text-muted); display:flex; align-items:flex-start; gap: var(--space-2);">
+                  <span style="color: var(--color-danger); flex-shrink:0;">✕</span> {{ item }}
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Itinerary -->
+        {% if itinerary %}
+        <div class="card" style="padding: var(--space-8);">
+          <h3 style="margin-bottom: var(--space-6);">Day-by-Day Itinerary</h3>
+          <div style="display:flex; flex-direction:column; gap: var(--space-1);">
+            {% for day in itinerary %}
+            <details style="border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); overflow:hidden;">
+              <summary style="padding: var(--space-4) var(--space-5); cursor:pointer; display:flex; align-items:center; gap: var(--space-4); list-style:none; background: var(--color-white); transition: background var(--transition-fast);">
+                <span style="width:36px; height:36px; border-radius:var(--radius-full); background: var(--color-forest); color:white; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-weight:var(--font-bold); font-size:var(--text-sm); flex-shrink:0;">{{ day.day_number }}</span>
+                <span style="font-family:var(--font-heading); font-weight:var(--font-semibold); color:var(--color-forest-dark);">{{ day.title }}</span>
+                {% if day.meals_included %}
+                <span style="margin-left:auto; font-size:var(--text-xs); color:var(--color-text-muted); background:var(--color-gray-100); padding: var(--space-1) var(--space-3); border-radius:var(--radius-full);">Meals: {{ day.meals_included }}</span>
+                {% endif %}
+              </summary>
+              <div style="padding: var(--space-5); background: var(--color-gray-50); border-top: 1px solid var(--color-gray-200);">
+                <p style="font-size:var(--text-sm); color:var(--color-text-muted); margin-bottom: var(--space-3);">{{ day.description }}</p>
+                {% if day.highlights_list %}
+                <div style="display:flex; flex-wrap:wrap; gap: var(--space-2); margin-top: var(--space-3);">
+                  {% for h in day.highlights_list %}
+                  <span style="background:rgba(27,67,50,0.08); color:var(--color-forest); font-size:var(--text-xs); padding: var(--space-1) var(--space-3); border-radius:var(--radius-full);">{{ h }}</span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if day.accommodation %}
+                <p style="font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-3);">Accommodation: <strong>{{ day.accommodation }}</strong></p>
+                {% endif %}
+              </div>
+            </details>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Reviews -->
+        <div class="card" style="padding: var(--space-8);" id="reviews">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-6); flex-wrap:wrap; gap: var(--space-4);">
+            <h3 style="margin:0;">Traveler Reviews</h3>
+            {% if avg_rating > 0 %}
+            <div style="display:flex; align-items:center; gap: var(--space-3);">
+              <span style="font-family:var(--font-heading); font-size:var(--text-4xl); font-weight:var(--font-extrabold); color:var(--color-forest-dark);">{{ avg_rating }}</span>
+              <div>
+                <div style="color:var(--color-gold); font-size:var(--text-lg);">{{ '★' * avg_rating|int }}{% if avg_rating % 1 >= 0.5 %}½{% endif %}</div>
+                <div style="font-size:var(--text-xs); color:var(--color-text-muted);">{{ review_count }} verified review{{ 's' if review_count != 1 }}</div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          {% if reviews %}
+          <div style="display:flex; flex-direction:column; gap: var(--space-6);">
+            {% for review in reviews %}
+            <div style="padding-bottom: var(--space-6); {% if not loop.last %}border-bottom: 1px solid var(--color-gray-200);{% endif %}">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap: var(--space-4); margin-bottom: var(--space-3); flex-wrap:wrap;">
+                <div>
+                  <div style="font-weight:var(--font-semibold);">{{ review.user.full_name }}</div>
+                  <div style="font-size:var(--text-xs); color:var(--color-text-muted);">{{ review.created_at.strftime('%B %Y') }}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap: var(--space-2);">
+                  <span style="color:var(--color-gold);">{{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}</span>
+                  {% if review.is_verified %}<span class="badge badge--easy" style="font-size:var(--text-xs);">✓ Verified</span>{% endif %}
+                </div>
+              </div>
+              {% if review.title %}<h5 style="margin-bottom:var(--space-2);">{{ review.title }}</h5>{% endif %}
+              <p style="font-size:var(--text-sm); color:var(--color-text-muted);">{{ review.comment }}</p>
+
+              <!-- Review photos -->
+              {% set photos = review.photos.all() %}
+              {% if photos %}
+              <div style="display:flex; gap:var(--space-3); margin-top:var(--space-4); flex-wrap:wrap;">
+                {% for photo in photos %}
+                <img src="{{ photo.image_url }}" alt="Review photo" style="width:100px; height:75px; object-fit:cover; border-radius:var(--radius-md);">
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <!-- Operator response -->
+              {% if review.operator_response %}
+              <div style="margin-top:var(--space-4); padding:var(--space-4); background:var(--color-gray-50); border-left:3px solid var(--color-forest); border-radius:var(--radius-md);">
+                <div style="font-size:var(--text-xs); font-weight:var(--font-semibold); color:var(--color-forest); margin-bottom:var(--space-2);">Response from {{ tour.operator.company_name }}</div>
+                <p style="font-size:var(--text-sm); color:var(--color-text-muted); margin:0;">{{ review.operator_response }}</p>
+              </div>
+              {% endif %}
+
+              <!-- Operator reply form -->
+              {% if current_user.is_authenticated and (current_user.role == 'admin' or (current_user.role == 'operator' and current_user.operator_profile and current_user.operator_profile.id == tour.operator_id)) and not review.operator_response %}
+              <form action="{{ url_for('reviews.operator_reply', review_id=review.id) }}" method="POST" style="margin-top:var(--space-4);">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <textarea name="operator_response" class="form-textarea" style="min-height:80px;" placeholder="Write a public reply to this review..."></textarea>
+                <button type="submit" class="btn btn--secondary btn--sm" style="margin-top:var(--space-2);">Post Reply</button>
+              </form>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div style="text-align:center; padding:var(--space-10) 0; color:var(--color-text-muted);">
+            <p style="font-size:var(--text-lg); margin-bottom:var(--space-2);">No reviews yet.</p>
+            <p>Be the first to share your experience!</p>
+          </div>
+          {% endif %}
+        </div>
+
+      </div><!-- /LEFT COLUMN -->
+
+      <!-- RIGHT COLUMN — STICKY BOOKING CARD -->
+      <div style="position:sticky; top: calc(var(--navbar-height) + var(--space-6));">
+        <div class="card" style="padding: var(--space-6);">
+          <div style="margin-bottom:var(--space-5);">
+            <div style="font-family:var(--font-heading); font-size:var(--text-3xl); font-weight:var(--font-extrabold); color:var(--color-forest);">
+              KES {{ "{:,.0f}".format(tour.price_kes) }}
+            </div>
+            <div style="color:var(--color-text-muted); font-size:var(--text-sm);">USD {{ "{:,.0f}".format(tour.price_usd) }} · per person</div>
+          </div>
+
+          <!-- Quick stats -->
+          <div style="display:flex; flex-direction:column; gap:var(--space-3); padding:var(--space-5); background:var(--color-gray-50); border-radius:var(--radius-lg); margin-bottom:var(--space-5);">
+            <div style="display:flex; justify-content:space-between; font-size:var(--text-sm);">
+              <span style="color:var(--color-text-muted);">Duration</span>
+              <strong>{{ tour.duration_days }} day{{ 's' if tour.duration_days != 1 }}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:var(--text-sm);">
+              <span style="color:var(--color-text-muted);">Group Size</span>
+              <strong>Max {{ tour.max_group_size }}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:var(--text-sm);">
+              <span style="color:var(--color-text-muted);">Difficulty</span>
+              <span class="badge {{ tour.difficulty_color }}">{{ tour.difficulty | title }}</span>
+            </div>
+            {% if tour.meeting_point %}
+            <div style="display:flex; justify-content:space-between; font-size:var(--text-sm);">
+              <span style="color:var(--color-text-muted);">Meeting Point</span>
+              <strong style="text-align:right; max-width:60%;">{{ tour.meeting_point }}</strong>
+            </div>
+            {% endif %}
+            {% if tour.deposit_percent < 100 %}
+            <div style="display:flex; justify-content:space-between; font-size:var(--text-sm);">
+              <span style="color:var(--color-text-muted);">Deposit</span>
+              <strong style="color:var(--color-success);">{{ tour.deposit_percent }}% to confirm</strong>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Available dates -->
+          {% if active_dates %}
+          <div style="margin-bottom:var(--space-5);">
+            <div style="font-size:var(--text-sm); font-weight:var(--font-semibold); margin-bottom:var(--space-3);">Next Departures</div>
+            <div style="display:flex; flex-direction:column; gap:var(--space-2);">
+              {% for date in active_dates[:3] %}
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:var(--text-sm); padding:var(--space-2) var(--space-3); background:var(--color-gray-50); border-radius:var(--radius-md);">
+                <span>{{ date.start_date.strftime('%b %d, %Y') }}</span>
+                {% if date.is_sold_out %}
+                <span class="badge badge--extreme" style="font-size:var(--text-xs);">Sold Out</span>
+                {% else %}
+                <span class="badge badge--easy" style="font-size:var(--text-xs);">{{ date.spots_available }} left</span>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('bookings.book_tour', slug=tour.slug, step='1') }}" class="btn btn--primary btn--full">Book This Tour</a>
+          {% else %}
+            <a href="{{ url_for('main.login') }}?next={{ request.path }}" class="btn btn--primary btn--full">Log In to Book</a>
+            <p style="text-align:center; font-size:var(--text-xs); color:var(--color-text-muted); margin-top:var(--space-3);">
+              No account? <a href="{{ url_for('main.register') }}" style="color:var(--color-burnt-orange);">Sign up free</a>
+            </p>
+          {% endif %}
+
+          <!-- Operator info -->
+          <div style="margin-top:var(--space-5); padding-top:var(--space-5); border-top:1px solid var(--color-gray-200);">
+            <div style="font-size:var(--text-xs); color:var(--color-text-muted); margin-bottom:var(--space-2);">Operated by</div>
+            <div style="display:flex; align-items:center; gap:var(--space-3);">
+              {% if tour.operator.logo_url %}
+              <img src="{{ tour.operator.logo_url }}" alt="{{ tour.operator.company_name }}" style="width:40px; height:40px; border-radius:var(--radius-md); object-fit:cover;">
+              {% else %}
+              <div style="width:40px; height:40px; border-radius:var(--radius-md); background:var(--color-forest); color:white; display:flex; align-items:center; justify-content:center; font-weight:var(--font-bold);">{{ tour.operator.company_name[0] }}</div>
+              {% endif %}
+              <div>
+                <div style="font-weight:var(--font-semibold); font-size:var(--text-sm);">{{ tour.operator.company_name }}</div>
+                {% if tour.operator.is_verified %}<span style="font-size:var(--text-xs); color:var(--color-success);">✓ Verified Operator</span>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /RIGHT COLUMN -->
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Make itinerary summary headers change bg on hover
+  document.querySelectorAll('details summary').forEach(s => {
+    s.addEventListener('mouseover', () => s.style.background = 'var(--color-gray-50)');
+    s.addEventListener('mouseout', () => s.style.background = 'var(--color-white)');
+  });
+</script>
+{% endblock %}

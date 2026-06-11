@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout Payment — Step 4 | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); background-color: var(--color-gray-50);">
+  <div class="container" style="max-width: 800px;">
+    <!-- Step Indicator -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-8); position: relative;">
+      <div style="position: absolute; top: 12px; left: 0; right: 0; height: 2px; background-color: var(--color-gray-200); z-index: 1;"></div>
+      <div style="position: absolute; top: 12px; left: 0; width: 100%; height: 2px; background-color: var(--color-burnt-orange); z-index: 2;"></div>
+      
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Date & Spots</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Details</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-forest); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">✓</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-forest);">Summary</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-burnt-orange); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">4</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-burnt-orange);">Payment</span>
+      </div>
+    </div>
+
+    <!-- Payment Form Card -->
+    <div class="card" style="padding: var(--space-8); box-shadow: var(--shadow-lg);">
+      <span class="section-subtitle">Secure Checkout</span>
+      <h2 style="margin-bottom: var(--space-2);">Payment details</h2>
+      <p style="color: var(--color-text-muted); margin-bottom: var(--space-6);">Your transaction is mock encrypted. Enter credentials below to finalize checkout.</p>
+
+      <!-- Amount Details -->
+      <div style="background-color: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-6); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Booking Amount</span>
+          <div style="font-weight: bold; color: var(--color-forest-dark);">{{ tour.title }}</div>
+        </div>
+        <div style="text-align: right;">
+          <strong style="color: var(--color-forest); font-size: var(--text-lg);">
+            KES {{ flow_data.total_price_kes|round|int|format }} / USD {{ flow_data.total_price_usd|round|int|format }}
+          </strong>
+        </div>
+      </div>
+
+      <form action="{{ url_for('bookings.book_tour', slug=tour.slug, step='4') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Cardholder Name -->
+        <div class="form-group">
+          <label class="form-label" for="cardname">Cardholder Name</label>
+          <input type="text" id="cardname" class="form-input" required placeholder="John Doe">
+        </div>
+
+        <!-- Card Number -->
+        <div class="form-group">
+          <label class="form-label" for="cardnumber">Card Number</label>
+          <div style="position: relative;">
+            <input type="text" id="cardnumber" class="form-input" required placeholder="4111 2222 3333 4444" pattern="[0-9 ]{12,19}">
+            <span style="position: absolute; right: var(--space-3); top: 12px; font-size: 1.2rem;">💳</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+          <!-- Expiration Date -->
+          <div class="form-group">
+            <label class="form-label" for="cardexpiry">Expiry Date</label>
+            <input type="text" id="cardexpiry" class="form-input" required placeholder="MM/YY">
+          </div>
+
+          <!-- CVV -->
+          <div class="form-group">
+            <label class="form-label" for="cardcvv">CVV / CVC Code</label>
+            <input type="password" id="cardcvv" class="form-input" required placeholder="***" pattern="[0-9]{3,4}">
+          </div>
+        </div>
+
+        <!-- Secure payment notice -->
+        <div style="display: flex; gap: var(--space-2); align-items: center; justify-content: center; margin: var(--space-6) 0; color: var(--color-success); font-size: var(--text-sm);">
+          <span>🔒 Secure TLS Connection Verified</span>
+        </div>
+
+        <!-- Submit actions -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-8);">
+          <a href="{{ url_for('bookings.book_tour', slug=tour.slug, step='3') }}" class="btn btn--outline-dark">
+            &larr; Back to Step 3
+          </a>
+          
+          <button type="submit" class="btn btn--primary" style="background: linear-gradient(135deg, var(--color-burnt-orange), var(--color-burnt-orange-dark)); color: white;">
+            Complete Payment &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

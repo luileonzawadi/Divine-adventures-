@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}Discover extraordinary adventures across Africa. Book curated tours — hiking, safaris, mountain climbing, water sports and cultural experiences with trusted local operators.{% endblock %}">
+  <meta name="keywords" content="adventure tours, Africa travel, safari, hiking, mountain climbing, Kenya tours, booking">
+  <meta name="author" content="Devine Adventures">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="{% block og_title %}Devine Adventures — Explore the Extraordinary{% endblock %}">
+  <meta property="og:description" content="Discover extraordinary adventures across Africa. Book curated tours with trusted local operators.">
+  <meta property="og:type" content="website">
+  
+  <title>{% block title %}Devine Adventures — Explore the Extraordinary{% endblock %}</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- ============================================
+       NAVBAR — Transparent to Solid
+       ============================================ -->
+  <nav id="main-nav" class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <!-- Logo -->
+      <a href="{{ url_for('main.index') }}" class="navbar__logo" id="nav-logo">
+        <div class="navbar__logo-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Sun / compass rose -->
+            <circle cx="13" cy="9" r="2.2" fill="white" opacity="0.95"/>
+            <!-- Mountain peaks -->
+            <polygon points="13,3 20,18 6,18" fill="white" opacity="0.3"/>
+            <polygon points="8,8 15,18 1,18" fill="white" opacity="0.55"/>
+            <polygon points="18,6 26,18 10,18" fill="white" opacity="0.55"/>
+            <!-- Ground line -->
+            <rect x="2" y="18" width="22" height="1.5" rx="0.75" fill="white" opacity="0.4"/>
+            <!-- Compass tick marks -->
+            <line x1="13" y1="1" x2="13" y2="3" stroke="white" stroke-width="1.2" opacity="0.7"/>
+            <line x1="13" y1="15" x2="13" y2="17" stroke="white" stroke-width="1.2" opacity="0.7"/>
+            <line x1="7" y1="9" x2="9" y2="9" stroke="white" stroke-width="1.2" opacity="0.7"/>
+            <line x1="17" y1="9" x2="19" y2="9" stroke="white" stroke-width="1.2" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="navbar__logo-text">
+          Devine<span>Adventures</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <div class="navbar__links" id="nav-links">
+        <a href="{{ url_for('main.index') }}" class="navbar__link {% if request.endpoint == 'main.index' %}navbar__link--active{% endif %}" id="nav-home">Home</a>
+        <a href="{{ url_for('main.index') }}#featured-tours" class="navbar__link" id="nav-tours">Explore Tours</a>
+        <a href="{{ url_for('main.index') }}#categories" class="navbar__link" id="nav-categories">Categories</a>
+        <a href="{{ url_for('main.index') }}#about" class="navbar__link" id="nav-about">About</a>
+        <a href="{{ url_for('main.index') }}#contact" class="navbar__link" id="nav-contact">Contact</a>
+      </div>
+
+      <!-- Desktop Auth Actions -->
+      <div class="navbar__actions" id="nav-actions">
+        {% if current_user and current_user.is_authenticated %}
+          {% if current_user.role == 'operator' or current_user.role == 'admin' %}
+            <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline btn--sm" id="nav-dashboard">Dashboard</a>
+          {% else %}
+            <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline btn--sm" id="nav-dashboard">Dashboard</a>
+          {% endif %}
+          <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--sm" id="nav-logout">Logout</a>
+        {% else %}
+          <a href="{{ url_for('main.login') }}" class="btn btn--outline btn--sm" id="nav-login">Log In</a>
+          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--sm" id="nav-register">Sign Up</a>
+        {% endif %}
+      </div>
+
+      <!-- Hamburger Menu (Mobile) -->
+      <button class="navbar__hamburger" id="navbar-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="navbar__mobile-menu" id="mobile-menu">
+      <a href="{{ url_for('main.index') }}" class="navbar__link navbar__link--active">Home</a>
+      <a href="{{ url_for('main.index') }}#featured-tours" class="navbar__link">Explore Tours</a>
+      <a href="{{ url_for('main.index') }}#categories" class="navbar__link">Categories</a>
+      <a href="{{ url_for('main.index') }}#about" class="navbar__link">About</a>
+      <a href="{{ url_for('main.index') }}#contact" class="navbar__link">Contact</a>
+      <div class="navbar__actions">
+        {% if current_user and current_user.is_authenticated %}
+          {% if current_user.role == 'operator' or current_user.role == 'admin' %}
+            <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline btn--lg">Dashboard</a>
+          {% else %}
+            <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline btn--lg">Dashboard</a>
+          {% endif %}
+          <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--lg">Logout</a>
+        {% else %}
+          <a href="{{ url_for('main.login') }}" class="btn btn--outline btn--lg">Log In</a>
+          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--lg">Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       FLASH MESSAGES
+       ============================================ -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container" id="flash-container">
+        {% for category, message in messages %}
+          <div class="flash-message flash-message--{{ category }}" role="alert" id="flash-{{ loop.index }}">
+            <span class="flash-message__icon">
+              {% if category == 'success' %}&#10003;
+              {% elif category == 'warning' %}&#9650;
+              {% elif category == 'danger' or category == 'error' %}&#10005;
+              {% else %}&#8505;{% endif %}
+            </span>
+            <div class="flash-message__content">
+              <p class="flash-message__text">{{ message }}</p>
+            </div>
+            <button class="flash-message__close" aria-label="Dismiss">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ============================================
+       MAIN CONTENT
+       ============================================ -->
+  <main id="main-content" class="page-enter">
+    {% block content %}
+    <!-- Hero placeholder for homepage -->
+    <section class="hero" id="hero">
+      <div class="hero__overlay"></div>
+      <div class="hero__content">
+        <h1 class="hero__title">
+          Explore the<br><span>Extraordinary</span>
+        </h1>
+        <p class="hero__subtitle">
+          Discover breathtaking adventures across Africa. From towering peaks to 
+          pristine coastlines — your next unforgettable journey starts here.
+        </p>
+        <div class="hero__actions">
+          <a href="#" class="btn btn--primary btn--lg" id="hero-cta-explore">Explore Tours</a>
+          <a href="#" class="btn btn--outline btn--lg" id="hero-cta-operator">Become an Operator</a>
+        </div>
+      </div>
+      <div class="hero__scroll-indicator">
+        <span>Scroll to explore</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+    {% endblock %}
+  </main>
+
+  <!-- ============================================
+       FOOTER
+       ============================================ -->
+  <footer class="footer" id="site-footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Brand Column -->
+        <div class="footer__brand">
+          <div class="footer__brand-name">
+            <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; margin-right:8px;" aria-hidden="true">
+              <circle cx="13" cy="9" r="2.2" fill="#F48C06" opacity="0.95"/>
+              <polygon points="13,3 20,18 6,18" fill="white" opacity="0.2"/>
+              <polygon points="8,8 15,18 1,18" fill="white" opacity="0.5"/>
+              <polygon points="18,6 26,18 10,18" fill="white" opacity="0.5"/>
+              <rect x="2" y="18" width="22" height="1.5" rx="0.75" fill="white" opacity="0.35"/>
+            </svg>
+            Devine<span>Adventures</span>
+          </div>
+          <p>
+            Connecting adventurers with extraordinary experiences across Africa. 
+            We partner with trusted local operators to bring you authentic, 
+            unforgettable journeys.
+          </p>
+          <div class="footer__social">
+            <!-- Facebook -->
+            <a href="#" class="footer__social-link" aria-label="Facebook" id="social-facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <!-- Instagram -->
+            <a href="#" class="footer__social-link" aria-label="Instagram" id="social-instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <!-- X / Twitter -->
+            <a href="#" class="footer__social-link" aria-label="X (Twitter)" id="social-twitter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <!-- YouTube -->
+            <a href="#" class="footer__social-link" aria-label="YouTube" id="social-youtube">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="footer__column-title">Explore</h4>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">All Tours</a></li>
+            <li><a href="#" class="footer__link">Safari Adventures</a></li>
+            <li><a href="#" class="footer__link">Mountain Climbing</a></li>
+            <li><a href="#" class="footer__link">Water Sports</a></li>
+            <li><a href="#" class="footer__link">Cultural Experiences</a></li>
+            <li><a href="#" class="footer__link">Featured Tours</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div>
+          <h4 class="footer__column-title">Company</h4>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">About Us</a></li>
+            <li><a href="#" class="footer__link">How It Works</a></li>
+            <li><a href="#" class="footer__link">Become an Operator</a></li>
+            <li><a href="#" class="footer__link">Blog</a></li>
+            <li><a href="#" class="footer__link">Careers</a></li>
+            <li><a href="#" class="footer__link">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Support -->
+        <div>
+          <h4 class="footer__column-title">Support</h4>
+          <ul class="footer__links">
+            <li><a href="#" class="footer__link">Help Center</a></li>
+            <li><a href="#" class="footer__link">Safety Guidelines</a></li>
+            <li><a href="#" class="footer__link">Cancellation Policy</a></li>
+            <li><a href="#" class="footer__link">Travel Insurance</a></li>
+            <li><a href="#" class="footer__link">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer__bottom">
+        <p>&copy; {{ current_year }} {{ site_name }}. All rights reserved.</p>
+        <div class="footer__bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

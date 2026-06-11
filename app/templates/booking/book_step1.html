@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}Book {{ tour.title }} — Step 1 | {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section" style="margin-top: var(--navbar-height); background-color: var(--color-gray-50);">
+  <div class="container" style="max-width: 800px;">
+    <!-- Step Indicator -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-8); position: relative;">
+      <div style="position: absolute; top: 12px; left: 0; right: 0; height: 2px; background-color: var(--color-gray-200); z-index: 1;"></div>
+      <div style="position: absolute; top: 12px; left: 0; width: 0%; height: 2px; background-color: var(--color-burnt-orange); z-index: 2; transition: width var(--transition-base);"></div>
+      
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-burnt-orange); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">1</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-burnt-orange);">Date & Spots</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-gray-200); color: var(--color-gray-500); display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">2</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-text-muted);">Details</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-gray-200); color: var(--color-gray-500); display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">3</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-text-muted);">Summary</span>
+      </div>
+      <div style="z-index: 3; text-align: center; flex: 1;">
+        <div style="width: 26px; height: 26px; border-radius: 50%; background-color: var(--color-gray-200); color: var(--color-gray-500); display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: bold; font-size: var(--text-sm);">4</div>
+        <span style="font-size: var(--text-xs); font-family: var(--font-heading); font-weight: 600; color: var(--color-text-muted);">Payment</span>
+      </div>
+    </div>
+
+    <!-- Main Booking Card -->
+    <div class="card" style="padding: var(--space-8); box-shadow: var(--shadow-lg);">
+      <span class="section-subtitle">Start Your Journey</span>
+      <h2 style="margin-bottom: var(--space-2);">{% block heading %}{{ tour.title }}{% endblock %}</h2>
+      <p style="color: var(--color-text-muted); margin-bottom: var(--space-6);">Select your preferred departure date and the number of travelers.</p>
+
+      <form action="{{ url_for('bookings.book_tour', slug=tour.slug, step='1') }}" method="POST" id="booking-form-step1">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- Tour Dates selection -->
+        <div class="form-group">
+          <label class="form-label" for="tour_date_id">Available Departures</label>
+          <div style="display: grid; gap: var(--space-3); margin-top: var(--space-2);">
+            {% for d in active_dates %}
+              <div style="border: 2px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-4); display: flex; align-items: center; justify-content: space-between; transition: all var(--transition-base); {% if d.is_sold_out %}opacity: 0.75; background-color: var(--color-gray-50);{% endif %}" class="date-selector-option">
+                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                  <input type="radio" name="tour_date_id" id="date-{{ d.id }}" value="{{ d.id }}" 
+                         {% if d.is_sold_out %}disabled{% else %}required{% endif %} 
+                         style="width: 20px; height: 20px; accent-color: var(--color-forest);"
+                         data-soldout="{{ 'true' if d.is_sold_out else 'false' }}">
+                  <label for="date-{{ d.id }}" style="cursor: pointer; display: flex; flex-col; gap: 2px;">
+                    <strong style="color: var(--color-forest-dark);">{{ d.start_date.strftime('%B %d, %Y') }}</strong>
+                    <span style="font-size: var(--text-xs); color: var(--color-text-muted);">
+                      Duration: {{ tour.duration_days }} Days &bull; Return: {{ d.end_date.strftime('%b %d, %Y') }}
+                    </span>
+                  </label>
+                </div>
+                
+                <div style="text-align: right;">
+                  <div style="font-weight: bold; color: var(--color-forest);">
+                    KES {{ d.effective_price_kes|round|int }} / USD {{ d.effective_price_usd|round|int }}
+                  </div>
+                  
+                  {% if d.is_sold_out %}
+                    <span class="badge badge--extreme" style="margin-top: var(--space-1);">Sold Out</span>
+                  {% else %}
+                    <span class="badge badge--easy" style="margin-top: var(--space-1);">{{ d.spots_available }} spots left</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% else %}
+              <p style="text-align: center; color: var(--color-text-muted); padding: var(--space-6);">No active departure dates scheduled at this time.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Participants count selection -->
+        <div class="form-group" style="margin-top: var(--space-6);">
+          <label class="form-label" for="num_guests">Number of Travelers</label>
+          <select class="form-select" id="num_guests" name="num_guests" required style="max-width: 200px;">
+            {% for i in range(1, tour.max_group_size + 1) %}
+              <option value="{{ i }}">{{ i }} Traveler{{ 's' if i > 1 else '' }}</option>
+            {% endfor %}
+          </select>
+          <span style="font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 4px; display: block;">
+            Max group size for this tour is {{ tour.max_group_size }} people.
+          </span>
+        </div>
+
+        <!-- Call to Action buttons -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-8);">
+          <a href="#" class="btn btn--outline-dark">Cancel</a>
+          
+          <button type="submit" class="btn btn--primary" id="btn-submit-step1">
+            Continue to Details &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Waitlist Card (Conditional Display) -->
+    <div id="waitlist-section" class="card" style="display: none; padding: var(--space-8); border: 2px dashed var(--color-burnt-orange); background-color: rgba(232, 93, 4, 0.02); margin-top: var(--space-6);">
+      <span class="badge badge--hard" style="margin-bottom: var(--space-3);">Fully Booked</span>
+      <h3 style="margin-bottom: var(--space-2);">Join the Waitlist</h3>
+      <p style="color: var(--color-text-muted); margin-bottom: var(--space-5);">This date is currently full. Provide your contact details and we will instantly notify you if a spot opens up.</p>
+
+      <form action="" method="POST" id="waitlist-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+          <div class="form-group">
+            <label class="form-label" for="waitlist_name">Full Name</label>
+            <input type="text" id="waitlist_name" name="waitlist_name" class="form-input" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="waitlist_email">Email Address</label>
+            <input type="email" id="waitlist_email" name="waitlist_email" class="form-input" placeholder="you@example.com">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="waitlist_phone">Phone Number (Optional)</label>
+          <input type="text" id="waitlist_phone" name="waitlist_phone" class="form-input" placeholder="e.g. +254 700 000000">
+        </div>
+
+        <button type="submit" class="btn btn--secondary btn--full" style="background-color: var(--color-burnt-orange); color: white;">
+          Submit Waitlist Request
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const radios = document.querySelectorAll('input[name="tour_date_id"]');
+    const submitBtn = document.getElementById('btn-submit-step1');
+    const waitlistSection = document.getElementById('waitlist-section');
+    const waitlistForm = document.getElementById('waitlist-form');
+    const selectOptions = document.querySelectorAll('.date-selector-option');
+
+    // Style helper for selected option
+    selectOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        const radio = opt.querySelector('input[type="radio"]');
+        if (radio && !radio.disabled) {
+          radio.checked = true;
+          updateStyles();
+        }
+      });
+    });
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', updateStyles);
+    });
+
+    function updateStyles() {
+      // Toggle styles of selection cards
+      selectOptions.forEach(opt => {
+        const radio = opt.querySelector('input[type="radio"]');
+        if (radio && radio.checked) {
+          opt.style.borderColor = 'var(--color-forest)';
+          opt.style.backgroundColor = 'rgba(27, 67, 50, 0.02)';
+        } else {
+          opt.style.borderColor = 'var(--color-gray-200)';
+          opt.style.backgroundColor = '';
+        }
+      });
+
+      // Show/hide waitlist container based on selected date
+      // Note: Disabled radios are checked via waitlist button click simulation below.
+    }
+
+    // Capture click on option card when it is disabled
+    selectOptions.forEach(opt => {
+      const radio = opt.querySelector('input[type="radio"]');
+      if (radio && radio.disabled) {
+        opt.style.cursor = 'pointer';
+        opt.addEventListener('click', () => {
+          const dateId = radio.value;
+          waitlistForm.action = `/tours/dates/${dateId}/waitlist`;
+          waitlistSection.style.display = 'block';
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.5';
+          
+          // Scroll to waitlist
+          waitlistSection.scrollIntoView({ behavior: 'smooth' });
+        });
+      } else {
+        opt.addEventListener('click', () => {
+          waitlistSection.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '';
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

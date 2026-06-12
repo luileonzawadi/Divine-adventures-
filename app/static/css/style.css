@@ -294,6 +294,12 @@ h6 { font-size: var(--text-lg); }
   color: var(--color-white);
 }
 
+.navbar__logo-img {
+  height: 100px;
+  width: auto;
+  display: block;
+}
+
 .navbar__logo-icon {
   width: 46px;
   height: 46px;
@@ -857,6 +863,13 @@ h6 { font-size: var(--text-lg); }
   max-width: 320px;
 }
 
+.footer__logo-img {
+  height: 80px;
+  width: auto;
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
 .footer__brand-name {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
@@ -1176,6 +1189,14 @@ h6 { font-size: var(--text-lg); }
     display: flex;
   }
 
+  .navbar__logo-img {
+    height: 60px;
+  }
+
+  .footer__logo-img {
+    height: 55px;
+  }
+
   /* Layout */
   .grid--2,
   .grid--3,
@@ -1229,6 +1250,14 @@ h6 { font-size: var(--text-lg); }
 @media (max-width: 480px) {
   .container {
     padding: 0 var(--space-4);
+  }
+
+  .navbar__logo-img {
+    height: 48px;
+  }
+
+  .footer__logo-img {
+    height: 44px;
   }
 
   .card__image {

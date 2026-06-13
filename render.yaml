@@ -3,7 +3,7 @@ services:
     name: devine-adventures
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn run:app --workers 2 --bind 0.0.0.0:$PORT
+    startCommand: gunicorn "run:app" --workers 2 --bind 0.0.0.0:$PORT
     envVars:
       - key: FLASK_ENV
         value: production

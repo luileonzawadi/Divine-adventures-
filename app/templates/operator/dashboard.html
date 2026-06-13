@@ -3,7 +3,20 @@
 {% block title %}Operator control Panel | {{ site_name }}{% endblock %}
 
 {% block content %}
-<section class="section" style="margin-top: var(--navbar-height); min-height: 80vh; background-color: var(--color-gray-50);">
+<div class="dashboard-wrapper">
+  <aside class="dashboard-sidebar">
+    <nav class="sidebar-nav">
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li style="margin-bottom: var(--space-4);"><a href="{{ url_for('operator.dashboard') }}" class="sidebar-link" style="color: var(--color-text); font-weight: var(--font-medium);">Dashboard</a></li>
+        <li style="margin-bottom: var(--space-4);"><a href="{{ url_for('operator.tours') }}" class="sidebar-link" style="color: var(--color-text); font-weight: var(--font-medium);">My Tours</a></li>
+        <li style="margin-bottom: var(--space-4);"><a href="{{ url_for('operator.settings') }}" class="sidebar-link" style="color: var(--color-text); font-weight: var(--font-medium);">Settings</a></li>
+        <li style="margin-bottom: var(--space-4);"><a href="{{ url_for('main.logout') }}" class="sidebar-link" style="color: var(--color-danger); font-weight: var(--font-medium);">Logout</a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="dashboard-main">
+    
+
   <div class="container">
     <!-- Header -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8); flex-wrap: wrap; gap: var(--space-4);">
@@ -22,7 +35,7 @@
     <!-- Revenue / Stats widgets -->
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); margin-bottom: var(--space-10);" class="grid--3">
       <!-- Confirmed Bookings Count -->
-      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-forest);">
+      <div class="card" style="padding: var(--space-3); text-align: center; border-bottom: 4px solid var(--color-forest);">
         <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Confirmed Bookings</span>
         <div style="font-size: var(--text-3xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
           {{ total_bookings }}
@@ -30,7 +43,7 @@
       </div>
       
       <!-- Revenue KES -->
-      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-burnt-orange);">
+      <div class="card" style="padding: var(--space-3); text-align: center; border-bottom: 4px solid var(--color-burnt-orange);">
         <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Gross Revenue (KES)</span>
         <div style="font-size: var(--text-2xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
           KES {{ revenue_kes|round|int|format }}
@@ -38,7 +51,7 @@
       </div>
 
       <!-- Revenue USD -->
-      <div class="card" style="padding: var(--space-5); text-align: center; border-bottom: 4px solid var(--color-gold);">
+      <div class="card" style="padding: var(--space-3); text-align: center; border-bottom: 4px solid var(--color-gold);">
         <span style="font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; font-weight: bold;">Gross Revenue (USD)</span>
         <div style="font-size: var(--text-2xl); font-weight: 800; color: var(--color-forest-dark); margin-top: var(--space-2);">
           USD {{ revenue_usd|round|int|format }}
@@ -51,7 +64,7 @@
     
     <div style="display: grid; gap: var(--space-6);">
       {% for t in tours %}
-        <div class="card" style="padding: var(--space-6);">
+        <div class="card" style="padding: var(--space-4);">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--color-gray-200); padding-bottom: var(--space-4); margin-bottom: var(--space-4); flex-wrap: wrap; gap: var(--space-2);">
             <div>
               <span class="badge badge--category" style="margin-bottom: var(--space-2);">{{ t.category|capitalize }}</span>
@@ -107,5 +120,8 @@
       {% endfor %}
     </div>
   </div>
-</section>
+
+    </main>
+  
+</div>
 {% endblock %}

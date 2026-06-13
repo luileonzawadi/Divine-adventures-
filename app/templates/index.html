@@ -135,7 +135,7 @@
         ('calendar', 'Flexible Booking', 'Easy cancellations and modifications. Deposit-based options available.'),
         ('map', 'Local Expertise', 'Guides who know the land — its secrets, stories, and safest routes.')
       ] %}
-      <div class="card" style="text-align:center; padding: var(--space-8);">
+      <div class="card" style="text-align:center; padding: var(--space-5);">
         <div style="width:56px; height:56px; border-radius:var(--radius-full); background:rgba(27,67,50,0.1); display:flex; align-items:center; justify-content:center; margin: 0 auto var(--space-4); color:var(--color-forest); font-family:var(--font-heading); font-weight:var(--font-bold); font-size:var(--text-xs); text-transform:uppercase; letter-spacing:0.05em;">{{ icon }}</div>
         <h4 style="margin-bottom: var(--space-3);">{{ title }}</h4>
         <p style="font-size: var(--text-sm); color: var(--color-text-muted);">{{ desc }}</p>
@@ -158,7 +158,7 @@
     </div>
     <div class="grid grid--3">
       {% for review in featured_reviews %}
-      <div class="card" style="padding: var(--space-6);">
+      <div class="card" style="padding: var(--space-4);">
         <!-- Photo -->
         {% set first_photo = review.photos.first() %}
         {% if first_photo %}

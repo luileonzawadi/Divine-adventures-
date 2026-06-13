@@ -49,7 +49,7 @@
       <div style="display:flex; flex-direction:column; gap: var(--space-8);">
 
         <!-- Overview -->
-        <div class="card" style="padding: var(--space-8);">
+        <div class="card" style="padding: var(--space-6);">
           <h3 style="margin-bottom: var(--space-5);">About This Tour</h3>
           <p style="color: var(--color-text-muted); line-height: 1.9; white-space: pre-line;">{{ tour.description }}</p>
 
@@ -85,7 +85,7 @@
 
         <!-- Itinerary -->
         {% if itinerary %}
-        <div class="card" style="padding: var(--space-8);">
+        <div class="card" style="padding: var(--space-6);">
           <h3 style="margin-bottom: var(--space-6);">Day-by-Day Itinerary</h3>
           <div style="display:flex; flex-direction:column; gap: var(--space-1);">
             {% for day in itinerary %}
@@ -117,7 +117,7 @@
         {% endif %}
 
         <!-- Reviews -->
-        <div class="card" style="padding: var(--space-8);" id="reviews">
+        <div class="card" style="padding: var(--space-6);" id="reviews">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-6); flex-wrap:wrap; gap: var(--space-4);">
             <h3 style="margin:0;">Traveler Reviews</h3>
             {% if avg_rating > 0 %}
@@ -189,7 +189,7 @@
 
       <!-- RIGHT COLUMN — STICKY BOOKING CARD -->
       <div style="position:sticky; top: calc(var(--navbar-height) + var(--space-6));">
-        <div class="card" style="padding: var(--space-6);">
+        <div class="card" style="padding: var(--space-5);">
           <div style="margin-bottom:var(--space-5);">
             <div style="font-family:var(--font-heading); font-size:var(--text-3xl); font-weight:var(--font-extrabold); color:var(--color-forest);">
               KES {{ "{:,.0f}".format(tour.price_kes) }}

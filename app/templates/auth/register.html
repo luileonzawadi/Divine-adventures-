@@ -17,63 +17,29 @@
       <h2 class="auth-modal__title">Create account</h2>
     </div>
 
-    <!-- role selector -->
-    <div class="auth-modal__roles">
-      <label class="auth-modal__role">
-        <input type="radio" name="role" value="traveler" form="reg-form" checked>
-        <div class="auth-modal__role-face">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Traveler</span>
-        </div>
-      </label>
-      <label class="auth-modal__role">
-        <input type="radio" name="role" value="operator" form="reg-form">
-        <div class="auth-modal__role-face">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-          <span>Operator</span>
-        </div>
-      </label>
-    </div>
+
+    <input type="hidden" name="role" value="traveler" form="reg-form">
+
 
     <form method="POST" action="{{ url_for('main.register') }}" id="reg-form" novalidate>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="auth-modal__row2">
         <div class="auth-modal__field">
-          <label class="auth-modal__label" for="first_name">First name</label>
-          <input class="auth-modal__input" type="text" id="first_name" name="first_name"
-                 placeholder="Jane" required autofocus autocomplete="given-name">
-        </div>
-        <div class="auth-modal__field">
-          <label class="auth-modal__label" for="last_name">Last name</label>
-          <input class="auth-modal__input" type="text" id="last_name" name="last_name"
-                 placeholder="Doe" required autocomplete="family-name">
+          <label class="auth-modal__label" for="name">Name</label>
+          <input class="auth-modal__input" type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
         </div>
       </div>
-
       <div class="auth-modal__row2">
         <div class="auth-modal__field">
-          <label class="auth-modal__label" for="username">Username</label>
-          <input class="auth-modal__input" type="text" id="username" name="username"
-                 placeholder="janedoe" required autocomplete="username">
-        </div>
-        <div class="auth-modal__field">
           <label class="auth-modal__label" for="email">Email</label>
-          <input class="auth-modal__input" type="email" id="email" name="email"
-                 placeholder="you@example.com" required autocomplete="email">
+          <input class="auth-modal__input" type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
         </div>
       </div>
-
       <div class="auth-modal__row2">
         <div class="auth-modal__field">
           <label class="auth-modal__label" for="password">Password</label>
-          <input class="auth-modal__input" type="password" id="password" name="password"
-                 placeholder="Min. 8 chars" required minlength="8" autocomplete="new-password">
-        </div>
-        <div class="auth-modal__field">
-          <label class="auth-modal__label" for="confirm_password">Confirm</label>
-          <input class="auth-modal__input" type="password" id="confirm_password" name="confirm_password"
-                 placeholder="Repeat password" required autocomplete="new-password">
+          <input class="auth-modal__input" type="password" id="password" name="password" placeholder="Min. 8 chars" required minlength="8" autocomplete="new-password">
         </div>
       </div>
 

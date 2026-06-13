@@ -340,7 +340,9 @@ h6 { font-size: var(--text-lg); }
 
 .navbar__logo-img {
   height: 130px;
+  max-width: 100%;
   width: auto;
+  object-fit: contain;
   display: block;
   flex-shrink: 0;
 }
@@ -440,6 +442,7 @@ h6 { font-size: var(--text-lg); }
   width: 32px;
   height: 32px;
   cursor: pointer;
+  position: relative;
   z-index: calc(var(--z-navbar) + 10);
   background: none;
   border: none;
@@ -473,8 +476,8 @@ h6 { font-size: var(--text-lg); }
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   background: linear-gradient(180deg, var(--color-forest-dark) 0%, var(--color-forest) 100%);
   z-index: var(--z-navbar);
   flex-direction: column;
@@ -1253,6 +1256,8 @@ h6 { font-size: var(--text-lg); }
 
   .navbar__logo-img {
     height: 54px;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   .navbar__logo-text {
@@ -1324,6 +1329,8 @@ h6 { font-size: var(--text-lg); }
 
   .navbar__logo-img {
     height: 44px;
+    max-width: 100%;
+    object-fit: contain;
   }
 
   .navbar__logo-text {

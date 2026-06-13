@@ -208,18 +208,26 @@
       <p>Whether you crave wildlife, peaks, or culture — there's something for every explorer.</p>
     </div>
     <div class="grid grid--4">
-      {% for label, category in [
-        ('Safari',            'safari'),
-        ('Mountain Climbing', 'mountain_climbing'),
-        ('Hiking',            'hiking'),
-        ('Water Sports',      'water_sports'),
-        ('Cultural',          'cultural'),
-        ('Camping',           'camping'),
-        ('Cycling',           'cycling'),
-        ('Photography',       'photography')
+      {% for label, category, image, desc in [
+        ('Safari',            'safari',            'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80', 'Track the Big Five across Africa\'s iconic plains'),
+        ('Mountain Climbing', 'mountain_climbing', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80', 'Conquer summits from Kilimanjaro to Mount Kenya'),
+        ('Hiking',            'hiking',            'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80', 'Explore scenic trails through forests and valleys'),
+        ('Water Sports',      'water_sports',      'https://images.unsplash.com/photo-1530053969600-caed2596d242?w=600&q=80', 'Surf, kayak and dive in pristine coastal waters'),
+        ('Cultural',          'cultural',          'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=600&q=80', 'Immerse yourself in rich African traditions'),
+        ('Camping',           'camping',           'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80', 'Sleep under the stars in the African wilderness'),
+        ('Cycling',           'cycling',           'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80', 'Pedal through breathtaking landscapes and villages'),
+        ('Photography',       'photography',       'https://images.unsplash.com/photo-1612392166886-ee8475b03af2?w=600&q=80', 'Capture Africa\'s wildlife and scenery like a pro')
       ] %}
-      <a href="#featured-tours" class="card" style="text-align:center; padding: var(--space-8); text-decoration:none; color:inherit;">
-        <h5 style="color: var(--color-forest-dark);">{{ label }}</h5>
+      <a href="#featured-tours" class="category-card" data-category="{{ category }}">
+        <div class="category-card__img">
+          <img src="{{ image }}" alt="{{ label }}" loading="lazy">
+          <div class="category-card__overlay"></div>
+        </div>
+        <div class="category-card__body">
+          <h5 class="category-card__title">{{ label }}</h5>
+          <p class="category-card__desc">{{ desc }}</p>
+          <span class="category-card__cta">Explore →</span>
+        </div>
       </a>
       {% endfor %}
     </div>

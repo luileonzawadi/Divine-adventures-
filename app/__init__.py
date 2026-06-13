@@ -11,22 +11,32 @@ scheduler = APScheduler()
 
 
 def ensure_review_columns(app):
-    """Ensure the reviews table has all required columns in SQLite."""
+    """Ensure all tables have required columns in SQLite."""
     if not app.config.get('SQLALCHEMY_DATABASE_URI', '').startswith('sqlite:'):
         return
 
     with app.app_context():
         try:
+            # reviews table
             result = db.session.execute(text("PRAGMA table_info('reviews')")).fetchall()
             columns = {row[1] for row in result}
-            migrations = [
+            for col, sql in [
                 ('is_flagged', 'ALTER TABLE reviews ADD COLUMN is_flagged BOOLEAN NOT NULL DEFAULT 0'),
                 ('operator_response', 'ALTER TABLE reviews ADD COLUMN operator_response TEXT'),
                 ('operator_responded_at', 'ALTER TABLE reviews ADD COLUMN operator_responded_at DATETIME'),
-            ]
-            for col, sql in migrations:
+            ]:
                 if col not in columns:
                     db.session.execute(text(sql))
+
+            # bookings table
+            result = db.session.execute(text("PRAGMA table_info('bookings')")).fetchall()
+            columns = {row[1] for row in result}
+            for col, sql in [
+                ('review_request_sent', 'ALTER TABLE bookings ADD COLUMN review_request_sent BOOLEAN NOT NULL DEFAULT 0'),
+            ]:
+                if col not in columns:
+                    db.session.execute(text(sql))
+
             db.session.commit()
         except OperationalError:
             db.session.rollback()

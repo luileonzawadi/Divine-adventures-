@@ -1,26 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}Devine Adventures — Explore the Extraordinary{% endblock %}
+{% block title %}Devine Adventures — Adventure Awaits{% endblock %}
 
 {% block content %}
 
 <!-- ============================================
-     HERO
+     HERO — Full-screen with adventure image
      ============================================ -->
-<section class="hero" id="hero" style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=80'); background-size: cover; background-position: center;">
+<section class="hero" id="hero" style="background-image: url('/static/images/adventure_1.jpeg'); background-size: cover; background-position: center;">
   <div class="hero__overlay"></div>
   <div class="hero__content">
-    <span class="section-subtitle" style="color: var(--color-burnt-orange-light);">Africa Awaits</span>
+    <span class="section-subtitle" style="color: var(--color-burnt-orange-light);">Devine Adventures</span>
     <h1 class="hero__title">
-      Explore the<br><span>Extraordinary</span>
+      Adventure<br><span>Awaits</span>
     </h1>
     <p class="hero__subtitle">
-      Discover breathtaking adventures across Africa. From towering peaks to
-      pristine coastlines — your next unforgettable journey starts here.
+      Exceptional and affordable outdoor experiences showcasing the best of Kenya's outdoors.
     </p>
     <div class="hero__actions">
-      <a href="#featured-tours" class="btn btn--primary btn--lg">Explore Tours</a>
-      <a href="#" class="btn btn--outline btn--lg">Become an Operator</a>
+      <a href="#adventure-calendar" class="btn btn--primary btn--lg">View Calendar →</a>
+      <a href="#membership" class="btn btn--outline btn--lg">Become a Member →</a>
     </div>
   </div>
   <div class="hero__scroll-indicator">
@@ -41,7 +40,7 @@
       </div>
       <div>
         <div style="font-family: var(--font-heading); font-size: var(--text-4xl); font-weight: var(--font-extrabold); color: var(--color-burnt-orange-light);">12K+</div>
-        <div style="color: rgba(255,255,255,0.7); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.1em;">Happy Travelers</div>
+        <div style="color: rgba(255,255,255,0.7); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.1em;">Happy Drifters</div>
       </div>
       <div>
         <div style="font-family: var(--font-heading); font-size: var(--text-4xl); font-weight: var(--font-extrabold); color: var(--color-burnt-orange-light);">50+</div>
@@ -56,89 +55,208 @@
 </section>
 
 <!-- ============================================
-     FEATURED TOURS
+     DIFFICULTY FILTER + ADVENTURE CALENDAR
      ============================================ -->
-<section class="section" id="featured-tours">
+<section class="section" id="adventure-calendar" style="background: var(--color-gray-50);">
   <div class="container">
     <div class="section-header">
-      <span class="section-subtitle">Handpicked For You</span>
-      <h2>Featured <span class="text-accent">Adventures</span></h2>
-      <p>Curated experiences with top-rated local operators, each verified for safety and authenticity.</p>
+      <span class="section-subtitle">Select Your Difficulty</span>
+      <h2>Where Would You Like <span class="text-accent">to Go?</span></h2>
+      <p>Browse upcoming adventures by difficulty level. Book your spot before it fills up!</p>
     </div>
 
-    {% if featured_tours %}
-    <div class="grid grid--3">
+    <!-- Difficulty Filter Buttons -->
+    <div class="difficulty-filters" id="difficulty-filters">
+      <button class="difficulty-filter-btn active" data-filter="all">All Adventures</button>
+      <button class="difficulty-filter-btn" data-filter="easy">🟢 Beginner Friendly</button>
+      <button class="difficulty-filter-btn" data-filter="moderate">🟡 Moderate</button>
+      <button class="difficulty-filter-btn" data-filter="hard">🔴 Challenging</button>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid" id="calendar-grid">
       {% for tour in featured_tours %}
-      <a href="{{ url_for('main.tour_detail', slug=tour.slug) }}" class="card" style="text-decoration: none; color: inherit;">
-        <div class="card__image">
-          {% if tour.cover_image_url %}
-            <img src="{{ tour.cover_image_url }}" alt="{{ tour.title }}" loading="lazy">
-          {% else %}
-            <div style="width:100%; height:100%; background: linear-gradient(135deg, var(--color-forest), var(--color-forest-light)); display:flex; align-items:center; justify-content:center; color:white; font-family:var(--font-heading); font-size:var(--text-lg); font-weight:var(--font-bold); letter-spacing:0.05em;">No Image</div>
-          {% endif %}
-          <div class="card__image-overlay"></div>
-          <div class="card__badges">
-            <span class="badge badge--category">{{ tour.category | replace('_', ' ') | title }}</span>
-            {% if tour.is_featured %}<span class="badge badge--featured">Featured</span>{% endif %}
-          </div>
-        </div>
-        <div class="card__body">
-          <div class="card__location">{{ tour.location }}</div>
-          <h3 class="card__title">{{ tour.title }}</h3>
-          <div class="card__meta">
-            <span class="card__meta-item">{{ tour.duration_days }} day{{ 's' if tour.duration_days != 1 }}</span>
-            <span class="card__meta-item">Up to {{ tour.max_group_size }} people</span>
-            <span class="badge {{ tour.difficulty_color }}">{{ tour.difficulty | title }}</span>
-          </div>
-          <div class="card__footer">
-            <div class="card__price">
-              KES {{ "{:,.0f}".format(tour.price_kes) }}
-              <small>/ person</small>
+        {% for date in tour.dates.filter_by(is_active=True).order_by('start_date').limit(2).all() %}
+        <a href="{{ url_for('main.tour_detail', slug=tour.slug) }}"
+           class="calendar-card" 
+           data-difficulty="{{ tour.difficulty }}"
+           style="text-decoration: none; color: inherit;">
+          <div class="calendar-card__image">
+            {% if tour.cover_image_url %}
+              <img src="{{ tour.cover_image_url }}" alt="{{ tour.title }}" loading="lazy">
+            {% else %}
+              <div style="width:100%; height:100%; background: linear-gradient(135deg, var(--color-forest), var(--color-forest-light)); display:flex; align-items:center; justify-content:center; color:white; font-family:var(--font-heading);">No Image</div>
+            {% endif %}
+            <!-- Date Badge -->
+            <div class="calendar-card__date-badge">
+              <span class="day">{{ date.start_date.strftime('%d') }}</span>
+              <span class="month">{{ date.start_date.strftime('%b') }}</span>
             </div>
-            {% if tour.average_rating > 0 %}
-            <div class="card__rating">
-              ★ {{ tour.average_rating }}
-              <span style="color: var(--color-text-muted); font-weight: var(--font-normal);">({{ tour.total_reviews }})</span>
-            </div>
+            <!-- Spots Badge -->
+            {% if date.is_sold_out %}
+              <div class="calendar-card__spots-badge calendar-card__spots-badge--sold-out">Sold Out</div>
+            {% elif date.spots_available <= 5 %}
+              <div class="calendar-card__spots-badge calendar-card__spots-badge--low">{{ date.spots_available }} left</div>
+            {% else %}
+              <div class="calendar-card__spots-badge calendar-card__spots-badge--available">{{ date.spots_available }} spots</div>
             {% endif %}
           </div>
-        </div>
-      </a>
+          <div class="calendar-card__body">
+            <div class="calendar-card__location">📍 {{ tour.location }}</div>
+            <h3 class="calendar-card__title">{{ tour.title }}</h3>
+            <div class="calendar-card__meta">
+              <span class="calendar-card__meta-item">🕐 {{ tour.duration_days }} day{{ 's' if tour.duration_days != 1 }}</span>
+              <span class="calendar-card__meta-item">👥 Max {{ tour.max_group_size }}</span>
+              <span class="badge {{ tour.difficulty_color }}">{{ tour.difficulty | title }}</span>
+            </div>
+            <div class="calendar-card__footer">
+              <div class="calendar-card__price">
+                KES {{ "{:,.0f}".format(tour.price_kes) }}
+                <small>/ person</small>
+              </div>
+              {% if not date.is_sold_out %}
+                <span class="calendar-card__book-btn">Book Ticket →</span>
+              {% else %}
+                <span class="calendar-card__book-btn" style="background: var(--color-gray-400); cursor: default;">Sold Out</span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+        {% endfor %}
       {% endfor %}
     </div>
-    <div style="text-align:center; margin-top: var(--space-12);">
-      <a href="#" class="btn btn--outline-dark btn--lg">View All Tours</a>
-    </div>
-    {% else %}
+
+    {% if not featured_tours %}
     <div style="text-align:center; padding: var(--space-16) 0; color: var(--color-text-muted);">
-      <p style="font-size: var(--text-lg); margin-bottom: var(--space-2);">No tours available yet.</p>
-      <p>Adventures coming soon. Check back shortly!</p>
+      <p style="font-size: var(--text-lg); margin-bottom: var(--space-2);">No adventures scheduled yet.</p>
+      <p>New drifts coming soon. Check back shortly!</p>
     </div>
     {% endif %}
   </div>
 </section>
 
 <!-- ============================================
-     WHY CHOOSE US
+     THE MEMBERSHIP ADVANTAGE
+     ============================================ -->
+<section class="section" id="membership">
+  <div class="container">
+    <div class="membership-section">
+      <div>
+        <span class="section-subtitle" style="color: var(--color-forest);">Why Join?</span>
+        <h2 style="margin-bottom: var(--space-6); color: var(--color-forest-dark);">The Membership <span class="text-accent">Advantage</span></h2>
+        <ol class="membership-list">
+          <li>Get over <strong>30 free experiences</strong> monthly as a Devine Adventures member, and enjoy up to <strong>20% off</strong> on all the cool stuff.</li>
+          <li>Pick how you want to pay — <strong>Mpesa, Card, or Apple Pay</strong> — for hassle-free adventures.</li>
+          <li>Pay by the <strong>5th</strong> of the month to keep the good times rolling with exclusive member deals.</li>
+          <li>Create your <a href="{{ url_for('main.register') }}" style="color: var(--color-burnt-orange); font-weight: var(--font-semibold);">account</a>, subscribe, and easily book awesome experiences with a subscription.</li>
+        </ol>
+        <div style="margin-top: var(--space-8);">
+          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--lg">Become a Member →</a>
+        </div>
+      </div>
+      <div class="membership-image">
+        <img src="/static/images/adventure_12.jpeg" alt="Happy hikers on a Devine Adventures trip" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     COMMUNITY QUOTE
+     ============================================ -->
+<section class="quote-banner">
+  <div class="container">
+    <p class="quote-banner__text">
+      "Nairobi's most budget-friendly hiking group, meeting adventurous folks, guided by friendly and professional guides"
+    </p>
+    <span class="quote-banner__author">— Mercy Githaiga, Drifter</span>
+  </div>
+</section>
+
+<!-- ============================================
+     SUBSCRIPTION PLANS
      ============================================ -->
 <section class="section" style="background: var(--color-gray-50);">
   <div class="container">
     <div class="section-header">
-      <span class="section-subtitle">Why Devine Adventures</span>
-      <h2>Travel With <span class="text-accent">Confidence</span></h2>
-      <p>Everything you need for a safe, seamless, and spectacular adventure.</p>
+      <span class="section-subtitle">Subscriptions</span>
+      <h2>Pick Your <span class="text-accent">Plan</span></h2>
+      <p>Unlock free and discounted experiences with a Devine Adventures membership.</p>
     </div>
-    <div class="grid grid--4">
-      {% for icon, title, desc in [
-        ('shield', 'Verified Operators', 'Every operator is vetted for safety standards, licenses, and traveler satisfaction.'),
-        ('tag', 'Best Price Guarantee', 'Transparent pricing with no hidden fees. Pay securely via M-Pesa or card.'),
-        ('calendar', 'Flexible Booking', 'Easy cancellations and modifications. Deposit-based options available.'),
-        ('map', 'Local Expertise', 'Guides who know the land — its secrets, stories, and safest routes.')
+
+    <div class="plans-grid">
+      <!-- Monthly Citizens -->
+      <div class="plan-card">
+        <div class="plan-card__name">Monthly — Citizens</div>
+        <div class="plan-card__price">KES 1,200<small>/mo</small></div>
+        <div class="plan-card__period">Billed monthly</div>
+        <ul class="plan-card__features">
+          <li>30+ free monthly experiences</li>
+          <li>Up to 20% off all activities</li>
+          <li>Priority booking access</li>
+          <li>Pay via Mpesa or Card</li>
+        </ul>
+        <a href="{{ url_for('main.register') }}" class="btn btn--outline-dark btn--full">Get Started</a>
+      </div>
+
+      <!-- Monthly Residents (Popular) -->
+      <div class="plan-card plan-card--popular">
+        <div class="plan-card__name">Monthly — Residents</div>
+        <div class="plan-card__price">KES 2,500<small>/mo</small></div>
+        <div class="plan-card__period">Billed monthly</div>
+        <ul class="plan-card__features">
+          <li>30+ free monthly experiences</li>
+          <li>Up to 20% off all activities</li>
+          <li>Priority booking access</li>
+          <li>All payment methods accepted</li>
+          <li>Bring a +1 at member rate</li>
+        </ul>
+        <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--full">Get Started</a>
+      </div>
+
+      <!-- Quarterly Residents -->
+      <div class="plan-card">
+        <div class="plan-card__name">Quarterly — Residents</div>
+        <div class="plan-card__price">KES 6,000<small>/qtr</small></div>
+        <div class="plan-card__period">Billed every 3 months · Save 20%</div>
+        <ul class="plan-card__features">
+          <li>All monthly benefits included</li>
+          <li>90+ cumulative free experiences</li>
+          <li>Exclusive quarterly events</li>
+          <li>Free Devine Adventures merch</li>
+        </ul>
+        <a href="{{ url_for('main.register') }}" class="btn btn--outline-dark btn--full">Get Started</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     THE SHOP
+     ============================================ -->
+<section class="section" id="shop">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-subtitle">Gear Up</span>
+      <h2>The Devine <span class="text-accent">Shop</span></h2>
+      <p>Rep the adventure lifestyle with our curated merch collection.</p>
+    </div>
+
+    <div class="shop-grid">
+      {% for title, price, img_num in [
+        ('Adventure Hoodie', 'KES 3,500', 13),
+        ('Stay Curious Tee', 'KES 1,500', 14),
+        ('Drift Thermal Bottle', 'KES 1,800', 15),
+        ('Custom Badges', 'KES 500', 16)
       ] %}
-      <div class="card" style="text-align:center; padding: var(--space-5);">
-        <div style="width:56px; height:56px; border-radius:var(--radius-full); background:rgba(27,67,50,0.1); display:flex; align-items:center; justify-content:center; margin: 0 auto var(--space-4); color:var(--color-forest); font-family:var(--font-heading); font-weight:var(--font-bold); font-size:var(--text-xs); text-transform:uppercase; letter-spacing:0.05em;">{{ icon }}</div>
-        <h4 style="margin-bottom: var(--space-3);">{{ title }}</h4>
-        <p style="font-size: var(--text-sm); color: var(--color-text-muted);">{{ desc }}</p>
+      <div class="shop-card">
+        <div class="shop-card__image">
+          <img src="/static/images/adventure_{{ img_num }}.jpeg" alt="{{ title }}" loading="lazy">
+        </div>
+        <div class="shop-card__body">
+          <div class="shop-card__title">{{ title }}</div>
+          <div class="shop-card__price">{{ price }}</div>
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -149,11 +267,11 @@
      TRAVELER REVIEWS
      ============================================ -->
 {% if featured_reviews %}
-<section class="section">
+<section class="section" style="background: var(--color-gray-50);">
   <div class="container">
     <div class="section-header">
       <span class="section-subtitle">Real Experiences</span>
-      <h2>What Travelers <span class="text-accent">Say</span></h2>
+      <h2>What Our Drifters <span class="text-accent">Say</span></h2>
       <p>Authentic reviews from adventurers who've been there.</p>
     </div>
     <div class="grid grid--3">
@@ -198,69 +316,49 @@
 {% endif %}
 
 <!-- ============================================
-     CATEGORIES
+     COMMUNITY GALLERY
      ============================================ -->
-<section class="section" id="categories" style="background: var(--color-gray-50);">
+<section class="section" id="community">
   <div class="container">
     <div class="section-header">
-      <span class="section-subtitle">Browse By Type</span>
-      <h2>Find Your <span class="text-accent">Adventure</span></h2>
-      <p>Whether you crave wildlife, peaks, or culture — there's something for every explorer.</p>
+      <span class="section-subtitle">Our Community</span>
+      <h2>The Adventure <span class="text-accent">Family</span></h2>
+      <p>Snapshots from our amazing community of hikers and nature lovers.</p>
     </div>
-    <div class="grid grid--4">
-      {% for label, category, image, desc in [
-        ('Safari',            'safari',            'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=600&q=80', 'Track the Big Five across Africa\'s iconic plains'),
-        ('Mountain Climbing', 'mountain_climbing', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80', 'Conquer summits from Kilimanjaro to Mount Kenya'),
-        ('Hiking',            'hiking',            'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80', 'Explore scenic trails through forests and valleys'),
-        ('Water Sports',      'water_sports',      'https://images.unsplash.com/photo-1530053969600-caed2596d242?w=600&q=80', 'Surf, kayak and dive in pristine coastal waters'),
-        ('Cultural',          'cultural',          'https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=600&q=80', 'Immerse yourself in rich African traditions'),
-        ('Camping',           'camping',           'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80', 'Sleep under the stars in the African wilderness'),
-        ('Cycling',           'cycling',           'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=600&q=80', 'Pedal through breathtaking landscapes and villages'),
-        ('Photography',       'photography',       'https://images.unsplash.com/photo-1612392166886-ee8475b03af2?w=600&q=80', 'Capture Africa\'s wildlife and scenery like a pro')
-      ] %}
-      <a href="#featured-tours" class="category-card" data-category="{{ category }}">
-        <div class="category-card__img">
-          <img src="{{ image }}" alt="{{ label }}" loading="lazy">
-          <div class="category-card__overlay"></div>
-        </div>
-        <div class="category-card__body">
-          <h5 class="category-card__title">{{ label }}</h5>
-          <p class="category-card__desc">{{ desc }}</p>
-          <span class="category-card__cta">Explore →</span>
-        </div>
-      </a>
+
+    <div class="community-gallery">
+      {% for i in range(17, 25) %}
+      <div class="community-gallery__item">
+        <img src="/static/images/adventure_{{ i }}.jpeg" alt="Community photo {{ i - 16 }}" loading="lazy">
+      </div>
       {% endfor %}
     </div>
   </div>
 </section>
 
 <!-- ============================================
-     ABOUT
+     WHY CHOOSE US
      ============================================ -->
-<section class="section" id="about">
+<section class="section" style="background: var(--color-gray-50);">
   <div class="container">
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items:center;">
-      <div>
-        <span class="section-subtitle">Our Story</span>
-        <h2 style="margin-bottom: var(--space-6);">Born From a <span class="text-accent">Passion</span> for Africa</h2>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-5); font-size: var(--text-lg);">Devine Adventures was founded by a group of passionate explorers who believed Africa's wild places deserved to be shared — safely, authentically, and responsibly.</p>
-        <p style="color: var(--color-text-muted); margin-bottom: var(--space-8);">We partner exclusively with licensed, verified local operators who know the terrain intimately. Every tour on our platform is handpicked, safety-audited, and backed by real traveler reviews.</p>
-        <div style="display:flex; gap: var(--space-6); flex-wrap:wrap;">
-          <div>
-            <div style="font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: var(--font-extrabold); color: var(--color-burnt-orange);">2019</div>
-            <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Founded</div>
-          </div>
-          <div>
-            <div style="font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: var(--font-extrabold); color: var(--color-burnt-orange);">8</div>
-            <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Countries Covered</div>
-          </div>
-          <div>
-            <div style="font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: var(--font-extrabold); color: var(--color-burnt-orange);">100%</div>
-            <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Local Operators</div>
-          </div>
-        </div>
+    <div class="section-header">
+      <span class="section-subtitle">Why Devine Adventures</span>
+      <h2>Travel With <span class="text-accent">Confidence</span></h2>
+      <p>Everything you need for a safe, seamless, and spectacular adventure.</p>
+    </div>
+    <div class="grid grid--4">
+      {% for icon, title, desc in [
+        ('🛡️', 'Verified Guides', 'Every guide is vetted for safety standards, licenses, and traveler satisfaction.'),
+        ('💰', 'Best Price Guarantee', 'Transparent pricing with no hidden fees. Pay securely via M-Pesa or card.'),
+        ('📅', 'Flexible Booking', 'Easy cancellations and modifications. Deposit-based options available.'),
+        ('🗺️', 'Local Expertise', 'Guides who know the land — its secrets, stories, and safest routes.')
+      ] %}
+      <div class="card" style="text-align:center; padding: var(--space-6);">
+        <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">{{ icon }}</div>
+        <h4 style="margin-bottom: var(--space-3);">{{ title }}</h4>
+        <p style="font-size: var(--text-sm); color: var(--color-text-muted);">{{ desc }}</p>
       </div>
-      <div style="background: linear-gradient(135deg, var(--color-forest), var(--color-forest-light)); border-radius: var(--radius-2xl); height: 400px;"></div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -268,7 +366,7 @@
 <!-- ============================================
      CONTACT
      ============================================ -->
-<section class="section" id="contact" style="background: var(--color-gray-50);">
+<section class="section" id="contact">
   <div class="container">
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items:start;">
       <div>
@@ -290,7 +388,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.15 3.42 2 2 0 0 1 3.12 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.5a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 15h1a2 2 0 0 1 .92 1.92z"/></svg>
             </div>
             <div>
-              <div style="font-weight: var(--font-semibold);">Call Us</div>
+              <div style="font-weight: var(--font-semibold);">Call / WhatsApp</div>
               <div style="color: var(--color-text-muted); font-size: var(--text-sm);">+254 700 000 000</div>
             </div>
           </div>
@@ -325,19 +423,54 @@
   </div>
 </section>
 
-
+<!-- ============================================
+     CTA BANNER
+     ============================================ -->
 <section style="background: linear-gradient(135deg, var(--color-forest-dark), var(--color-forest)); padding: var(--space-20) 0;">
   <div class="container" style="text-align:center;">
     <span class="section-subtitle" style="color: var(--color-burnt-orange-light);">Ready to Go?</span>
     <h2 style="color: var(--color-white); margin-bottom: var(--space-6);">Your Next Adventure<br><span style="color: var(--color-burnt-orange-light);">Starts Today</span></h2>
     <p style="color: rgba(255,255,255,0.75); font-size: var(--text-lg); max-width: 560px; margin: 0 auto var(--space-10);">
-      Join thousands of travelers who've discovered Africa's wonders through Devine Adventures.
+      Join thousands of travelers who've discovered Kenya's wonders through Devine Adventures.
     </p>
     <div class="hero__actions">
-      <a href="#featured-tours" class="btn btn--primary btn--lg">Browse Tours</a>
-      <a href="#" class="btn btn--outline btn--lg">Talk to Us</a>
+      <a href="#adventure-calendar" class="btn btn--primary btn--lg">Browse Tours</a>
+      <a href="#contact" class="btn btn--outline btn--lg">Talk to Us</a>
     </div>
   </div>
 </section>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+/* ============================================
+   DIFFICULTY FILTER — Live filter calendar cards
+   ============================================ */
+(function() {
+  const filterBtns = document.querySelectorAll('.difficulty-filter-btn');
+  const calendarCards = document.querySelectorAll('.calendar-card');
+
+  if (!filterBtns.length || !calendarCards.length) return;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Toggle active state
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+
+      calendarCards.forEach(card => {
+        if (filter === 'all' || card.dataset.difficulty === filter) {
+          card.style.display = '';
+          card.style.animation = 'fadeIn 0.4s ease-out';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+})();
+</script>
 {% endblock %}

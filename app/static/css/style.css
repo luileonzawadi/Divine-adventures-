@@ -335,20 +335,19 @@ h6 { font-size: var(--text-lg); }
   width: 100%;
   max-width: var(--container-wide);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 var(--space-4);
+  overflow: hidden;
 }
 
 /* Logo */
 .navbar__logo {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  font-family: var(--font-heading);
-  font-weight: var(--font-extrabold);
-  font-size: var(--text-xl);
-  color: var(--color-white);
+  gap: var(--space-2);
   text-decoration: none;
   z-index: calc(var(--z-navbar) + 10);
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .navbar__logo:hover {
@@ -356,12 +355,12 @@ h6 { font-size: var(--text-lg); }
 }
 
 .navbar__logo-img {
-  height: 60px;
-  max-width: 100%;
+  height: 54px;
   width: auto;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+  max-width: 160px;
 }
 
 .navbar__logo-text {
@@ -449,13 +448,16 @@ h6 { font-size: var(--text-lg); }
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  flex-shrink: 0;
 }
 
-/* Hamburger wrap for positioning the mini popup */
+/* Hamburger wrap */
 .navbar__hamburger-wrap {
   position: static;
   display: none;
+  flex-shrink: 0;
+  margin-left: var(--space-2);
 }
 
 /* Mini popup dropdown — positioned fixed so it escapes navbar stacking context */
@@ -1440,9 +1442,15 @@ h6 { font-size: var(--text-lg); }
   }
 
   .navbar {
-    width: calc(100% - 1.5rem);
+    width: calc(100% - 1rem);
     height: 58px;
     border-radius: var(--radius-full);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .navbar__inner {
+    padding: 0 var(--space-3);
   }
 
   /* Navbar mobile */
@@ -1452,25 +1460,17 @@ h6 { font-size: var(--text-lg); }
   }
 
   .navbar__hamburger-wrap {
-    display: block;
+    display: flex;
+    align-items: center;
   }
 
   .navbar__hamburger {
     display: flex;
   }
 
-  .navbar__mobile-menu {
-    display: flex;
-  }
-
-  .navbar__mobile-menu.open {
-    transform: translateX(0);
-  }
-
   .navbar__logo-img {
-    height: 46px;
-    width: auto;
-    object-fit: contain;
+    height: 42px;
+    max-width: 130px;
   }
 
   /* page content offset so it starts below pill */
@@ -1627,22 +1627,22 @@ h6 { font-size: var(--text-lg); }
   }
 
   .container {
-    padding: 0 var(--space-4);
+    padding: 0 var(--space-3);
   }
 
   .navbar {
-    width: calc(100% - 1rem);
-    height: 54px;
-  }
-
-  .navbar__logo-img {
-    height: 38px;
-    width: auto;
-    object-fit: contain;
+    width: calc(100% - 0.75rem);
+    height: 52px;
   }
 
   .navbar__inner {
-    padding: 0 var(--space-4);
+    padding: 0 var(--space-3);
+  }
+
+  .navbar__logo-img {
+    height: 36px;
+    max-width: 110px;
+    object-fit: contain;
   }
 
   .footer__logo-img {

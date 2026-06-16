@@ -406,9 +406,18 @@
     </div>
 
     <div class="community-gallery">
-      {% for n in [1, 5, 10, 15, 20, 25, 30, 35] %}
+      {% for img in [
+        'images/members/membership.jpeg',
+        'images/members/member_2.jpeg',
+        'images/members/member_3.jpeg',
+        'images/members/member_4.jpeg',
+        'images/members/member_19.jpeg',
+        'images/members/member_24.jpeg',
+        'images/members/member_1.jpeg',
+        'images/members/member_20.jpeg'
+      ] %}
       <div class="community-gallery__item">
-        <img src="{{ url_for('static', filename='images/adventure_' ~ n ~ '.jpeg') }}" alt="Community adventure photo" loading="lazy">
+        <img src="{{ url_for('static', filename=img) }}" alt="Community adventure photo" loading="lazy">
       </div>
       {% endfor %}
     </div>

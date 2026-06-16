@@ -110,7 +110,8 @@
   /* Layout */
   --container-max: 1280px;
   --container-wide: 1440px;
-  --navbar-height: 200px;
+  --navbar-height: 90px;
+  --navbar-top-offset: 16px;
 }
 
 /* --- Reset & Base --- */
@@ -289,27 +290,29 @@ h6 { font-size: var(--text-lg); }
    ============================================ */
 .navbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: var(--navbar-top-offset);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: var(--z-navbar);
-  height: var(--navbar-height);
+  height: 70px;
+  width: calc(100% - 3rem);
+  max-width: 1200px;
   display: flex;
   align-items: center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   background-color: rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   transition: background-color var(--transition-slow),
               box-shadow var(--transition-slow),
-              backdrop-filter var(--transition-slow);
+              width var(--transition-slow);
 }
 
 .navbar--solid {
   background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.14);
 }
 
 .navbar__inner {
@@ -340,7 +343,7 @@ h6 { font-size: var(--text-lg); }
 }
 
 .navbar__logo-img {
-  height: 190px;
+  height: 60px;
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -1415,7 +1418,14 @@ h6 { font-size: var(--text-lg); }
 
 @media (max-width: 768px) {
   :root {
-    --navbar-height: 70px;
+    --navbar-height: 90px;
+    --navbar-top-offset: 10px;
+  }
+
+  .navbar {
+    width: calc(100% - 1.5rem);
+    height: 60px;
+    border-radius: var(--radius-full);
   }
 
   /* Navbar mobile */
@@ -1441,7 +1451,7 @@ h6 { font-size: var(--text-lg); }
   }
 
   .navbar__logo-img {
-    height: 54px;
+    height: 44px;
     max-width: 100%;
     object-fit: contain;
   }

@@ -1,0 +1,25 @@
+=== HEADINGS ===
+H2: Cart
+H2: Adventure Awaits
+H2: Select your difficulty
+H2: Where would you like to go?
+H2: The Membership Advantage
+H2: “Nairobi’s most budget-friendly hiking group, meeting adventurous folks, guided by friendly and professional guides”
+H2: The Drift Shop
+H2: Lets Drift Subscription (Citizens)
+H2: Lets Drift Monthly Subscription (Residents&Non Residents)
+H2: Lets Drift Quarterly Subscription (Residents&Non Residents)
+H2: Stay Curious Tee
+H2: Drift Power Pack
+H2: Hoodie
+H2: Custom Badges
+H2: Lets Drift Tee
+H2: Drift Thermal Bottle
+H4: Adventures
+H4: Community
+H4: Subscriptions
+
+=== PARAGRAPHS ===
+- Exceptional and affordable outdoor experiences showcasing the best of Kenya's outdoors.
+- Mercy Githaiga – Drifter
+- © 2026 Lets Drift. All Rights Reserved — Privacy Policy — Terms & Conditions — Waiver & Indemnity Agreement

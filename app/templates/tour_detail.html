@@ -43,7 +43,7 @@
      ============================================ -->
 <section class="section" style="background: var(--color-gray-50);">
   <div class="container">
-    <div style="display:grid; grid-template-columns: 1fr 360px; gap: var(--space-10); align-items:start;">
+    <div class="tour-detail-grid">
 
       <!-- LEFT COLUMN -->
       <div style="display:flex; flex-direction:column; gap: var(--space-8);">
@@ -54,7 +54,7 @@
           <p style="color: var(--color-text-muted); line-height: 1.9; white-space: pre-line;">{{ tour.description }}</p>
 
           {% if tour.included_list or tour.excluded_list %}
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap: var(--space-6); margin-top: var(--space-8);">
+          <div class="included-excluded-grid">
             {% if tour.included_list %}
             <div>
               <h5 style="color: var(--color-forest); margin-bottom: var(--space-4);">What's Included</h5>

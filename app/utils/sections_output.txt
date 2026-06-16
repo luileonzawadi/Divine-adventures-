@@ -1,0 +1,69 @@
+=== MEMBERSHIP SECTION (surrounding 2500 chars) ===
+erit_tablet inherit_phone "  data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0" >
+		<div class="vc_column-inner" >
+			<div class="wpb_wrapper">
+				<div class="nectar-split-heading" data-align="default" data-m-align="inherit" data-animation-type="default" data-animation-delay="0" data-m-rm-animation="" data-stagger="" data-custom-font-size="false" ><div class="heading-line" > <div><h2 style="text-align: center; color: #299089;">The Membership Advantage</h2> </div> </div></div>
+<div class="wpb_text_column wpb_content_element " >
+	<div class="wpb_wrapper">
+		<ol>
+<li style="font-weight: 400;" aria-level="1">Get over 30 free experiences monthly as a Lets Drift <a href="https://letsdrift.co.ke/subscribe-to-become-a-member/">member</a>, and enjoy up to 20% off on all the cool stuff.</li>
+<li aria-level="1">Pick how you want to pay—Mpesa, Card, or Apple Pay—for hassle-free adventures with Lets Drift.</li>
+<li aria-level="1">Pay by the <strong>5th</strong> of the month to keep the good times rolling with exclusive deals.</li>
+<li aria-level="1">Create your <a href="https://letsdrift.co.ke/my-account/">account</a>, <a href="https://letsdrift.co.ke/subscribe-to-become-a-member/">subscribe</a>, and easily <a href="https://letsdrift.co.ke/subscribe-to-become-a-member/">book</a> awesome experiences with a subscription that gets you free and discounted tickets.</li>
+</ol>
+	</div>
+</div>
+
+
+
+
+			</div> 
+		</div>
+	</div> 
+
+	<div style="" class="vc_col-sm-6 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone " data-using-bg="true" data-border-radius="10px" data-bg-cover="true" data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0" >
+		<div class="vc_column-inner" ><div class="column-image-bg-wrap" data-n-parallax-bg="true" data-parallax-speed="very_subtle" data-bg-pos="center center" data-bg-animation="none" data-bg-overlay="false"><div class="inner-wrap"><div class="column-image-bg parallax-layer lazyload" style=" background-image:inherit; " data-bg-image="url(&#039;https://letsdrift.co.ke/wp-content/uploads/2022/06/9.jpg&#039;)"></div></div></div>
+			<div class="wpb_wrapper">
+				<div class="divider-wrap" data-alignment="default"><div style="height: 300px;" class="divider"></div></div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_6a2db231e760d"  data-br="10px" data-br-applies="bg" data-column-margin="default" data-midnight="light"  class="wpb_row vc_row-fluid vc_row parallax_section  top_padding_tablet_90px top_padding_phone_90px "  style="padding-top: 100px; padding-bottom: 100px; "><div class="row-bg-wrap" data-bg-animation="none" data-bg-overlay="true"><div class="inner-wrap using-image"><div class="row-bg using-image lazyload" data-parallax-speed="fast" style="background-image:inherit; background-position: center center; background-repeat: no-repeat; " data-bg-image="url
+
+========================================
+
+=== ADVENTURE AWAITS SECTION (surrounding 2500 chars) ===
+s=""> <div class="swiper-wrapper"><div class="swiper-slide" data-desktop-content-width="auto" data-tablet-content-width="auto" data-bg-alignment="center" data-color-scheme="light" data-x-pos="centered" data-y-pos="middle" ><div class="slide-bg-wrap"><div class="image-bg lazyload" style="background-image:inherit;" data-bg-image="url(https://letsdrift.co.ke/wp-content/uploads/2022/06/Lets-Drift-Website-Feature-Images.jpg)"> &nbsp; </div></div><div class="container">
+						<div class="content"><h2>Adventure Awaits</h2><p  ><span>Exceptional and affordable outdoor experiences showcasing the best of Kenya's outdoors.</span></p><div class="buttons"><div class="button solid_color">
+										 <a class="white" href="https://letsdrift.co.ke/calendar/">View Calendar →</a>
+										</div><div class="button solid_color">
+										<a class="extra-color-1" href="https://letsdrift.co.ke/subscribe-to-become-a-member/">Become a Member →</a>
+										</div></div></div>
+								</div><!--/container--><div class="video-texture "> <span class="ie-fix"></span> </div></div> <!--/swiper-slide--></div><div class="nectar-slider-loading "> <span class="loading-icon none">   </span> </div> </div> 
+					
+					</div>
+			</div> 
+		</div>
+	</div> 
+</div></div>
+		<div id="fws_6a2db231db0e5"  data-column-margin="default" data-midnight="dark"  class="wpb_row vc_row-fluid vc_row full-width-section   top_padding_tablet_40px top_padding_phone_30px "  style="padding-top: 60px; padding-bottom: 80px; "><div class="row-bg-wrap" data-bg-animation="none" data-bg-overlay="false"><div class="inner-wrap"><div class="row-bg using-bg-color"  style="background-color: rgba(0,0,0,0.04); "></div></div></div><div class="row_col_wrap_12 col span_12 dark center">
+	<div  class="vc_col-sm-12 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone "  data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0" >
+		<div class="vc_column-inner" >
+			<div class="wpb_wrapper">
+				<div id="fws_6a2db231dbd00" data-midnight="" data-column-margin="default" class="wpb_row vc_row-fluid vc_row inner_row  "  style=""><div class="row-bg-wrap"> <div class="row-bg" ></div> </div><div class="row_col_wrap_12_inner col span_12  left">
+	<div  class="vc_col-sm-3 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone "   data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div class="vc_column-inner" >
+		<div class="wpb_wrapper">
+			
+		</div> 
+	</div>
+	</div> 
+
+	<div  class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone "   data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+		<div class="vc_column-inner" >
+		<div class="wpb_wrapper">
+			<div class="nectar-
+
+========================================
+

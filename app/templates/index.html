@@ -14,7 +14,7 @@
     {% set hero_images = [
       'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=85',
       'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1920&q=85',
-      'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=85',
+      url_for('static', filename='images/members/membership.jpeg'),
       'https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=1920&q=85',
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=85',
       'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=1920&q=85',
@@ -227,11 +227,11 @@
       <!-- RIGHT: stacked images -->
       <div class="membership-images">
         <div class="membership-images__primary">
-          <img src="{{ url_for('static', filename='images/members/member_2.jpeg') }}"
+          <img src="{{ url_for('static', filename='images/members/membership.jpeg') }}"
                alt="Members on adventure" loading="lazy">
         </div>
         <div class="membership-images__secondary">
-          <img src="{{ url_for('static', filename='images/members/member_4.jpeg') }}"
+          <img src="{{ url_for('static', filename='images/members/membership.jpeg') }}"
                alt="Members exploring" loading="lazy">
         </div>
       </div>

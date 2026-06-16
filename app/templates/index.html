@@ -11,9 +11,17 @@
 
   <!-- Carousel slides -->
   <div class="hero__carousel" id="heroCarousel" aria-label="Adventure photo carousel">
-    {% for i in [3, 7, 11, 18, 24, 30] %}
+    {% set hero_images = [
+      'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=85',
+      'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=85',
+      'https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=1920&q=85',
+      'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=1920&q=85',
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=85',
+      'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=1920&q=85'
+    ] %}
+    {% for img in hero_images %}
     <div class="hero__slide {% if loop.first %}hero__slide--active{% endif %}"
-         style="background-image: url('{{ url_for('static', filename='images/adventure_' ~ i ~ '.jpeg') }}');">
+         style="background-image: url('{{ img }}');">
     </div>
     {% endfor %}
   </div>
@@ -175,7 +183,7 @@
         </div>
       </div>
       <div class="membership-image">
-        <img src="/static/images/adventure_12.jpeg" alt="Happy hikers on a Devine Adventures trip" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=900&q=85" alt="Happy hikers on a Devine Adventures trip" loading="lazy">
       </div>
     </div>
   </div>
@@ -263,15 +271,15 @@
     </div>
 
     <div class="shop-grid">
-      {% for title, price, img_num in [
-        ('Adventure Hoodie', 'KES 3,500', 13),
-        ('Stay Curious Tee', 'KES 1,500', 14),
-        ('Drift Thermal Bottle', 'KES 1,800', 15),
-        ('Custom Badges', 'KES 500', 16)
+      {% for title, price, img in [
+        ('Adventure Hoodie',      'KES 3,500', 'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80'),
+        ('Stay Curious Tee',      'KES 1,500', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&q=80'),
+        ('Drift Thermal Bottle',  'KES 1,800', 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&q=80'),
+        ('Custom Badges',         'KES 500',   'https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=600&q=80')
       ] %}
       <div class="shop-card">
         <div class="shop-card__image">
-          <img src="/static/images/adventure_{{ img_num }}.jpeg" alt="{{ title }}" loading="lazy">
+          <img src="{{ img }}" alt="{{ title }}" loading="lazy">
         </div>
         <div class="shop-card__body">
           <div class="shop-card__title">{{ title }}</div>
@@ -347,9 +355,19 @@
     </div>
 
     <div class="community-gallery">
-      {% for i in range(17, 25) %}
+      {% set gallery_imgs = [
+        'https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=600&q=80',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',
+        'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=600&q=80',
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
+        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
+        'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80',
+        'https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=600&q=80',
+        'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&q=80'
+      ] %}
+      {% for img in gallery_imgs %}
       <div class="community-gallery__item">
-        <img src="/static/images/adventure_{{ i }}.jpeg" alt="Community photo {{ i - 16 }}" loading="lazy">
+        <img src="{{ img }}" alt="Community adventure photo" loading="lazy">
       </div>
       {% endfor %}
     </div>

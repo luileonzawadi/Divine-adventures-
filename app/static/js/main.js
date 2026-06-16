@@ -46,31 +46,42 @@ function initNavbar() {
 function initMobileMenu() {
   const hamburger = document.getElementById('navbar-hamburger');
   const mobileMenu = document.getElementById('mobile-menu');
+  const closeBtn  = document.getElementById('mobile-close');
   if (!hamburger || !mobileMenu) return;
 
+  function openMenu() {
+    hamburger.classList.add('active');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileMenu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    mobileMenu.classList.toggle('open');
-    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    mobileMenu.classList.contains('open') ? closeMenu() : openMenu();
   });
 
-  // Close mobile menu when clicking a link
-  const mobileLinks = mobileMenu.querySelectorAll('.navbar__link');
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('active');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+  // Close when clicking the backdrop (outside the drawer)
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) closeMenu();
   });
 
-  // Close on escape key
+  // Close on link click
+  mobileMenu.querySelectorAll('.navbar__mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
-      hamburger.classList.remove('active');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
   });
 }
 

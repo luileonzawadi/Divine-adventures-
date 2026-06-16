@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Flask / SQLite
+instance/
+*.db
+*.sqlite3
+
+# Environment
+.env
+*.env
+
+# WhatsApp / media dumps
+WhatsApp\ Image*
+WhatsApp Image*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
+*.tmp
+app/utils/parsed_text.txt
+app/utils/sections_output.txt

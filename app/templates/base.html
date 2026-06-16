@@ -26,66 +26,115 @@
 </head>
 <body>
   <!-- ============================================
-       NAVBAR — Transparent to Solid
+       TOP BAR
+       ============================================ -->
+  <div class="topbar" id="topbar">
+    <div class="topbar__inner">
+      <div class="topbar__left">
+        <span class="topbar__item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.15 3.42 2 2 0 0 1 3.12 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.5a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 15h1a2 2 0 0 1 .92 1.92z"/></svg>
+          +254 700 000 000
+        </span>
+        <span class="topbar__item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          hello@devineadventures.co.ke
+        </span>
+      </div>
+      <div class="topbar__right">
+        <a href="#" class="topbar__social" aria-label="Facebook">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="topbar__social" aria-label="Instagram">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="#" class="topbar__social" aria-label="X">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       NAVBAR
        ============================================ -->
   <nav id="main-nav" class="navbar" role="navigation" aria-label="Main navigation">
     <div class="navbar__inner">
+
       <!-- Logo -->
       <a href="{{ url_for('main.index') }}" class="navbar__logo" id="nav-logo">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Devine Adventures" class="navbar__logo-img">
       </a>
 
-      <!-- Desktop Navigation Links -->
+      <!-- Desktop Nav Links — centred -->
       <div class="navbar__links" id="nav-links">
-        <a href="{{ url_for('main.index') }}" class="navbar__link {% if request.endpoint == 'main.index' %}navbar__link--active{% endif %}" id="nav-home">Home</a>
-        <a href="{{ url_for('main.index') }}#featured-tours" class="navbar__link" id="nav-tours">Explore Tours</a>
-        <a href="{{ url_for('main.index') }}#categories" class="navbar__link" id="nav-categories">Categories</a>
-        <a href="{{ url_for('main.index') }}#about" class="navbar__link" id="nav-about">About</a>
-        <a href="{{ url_for('main.index') }}#contact" class="navbar__link" id="nav-contact">Contact</a>
+        <a href="{{ url_for('main.index') }}" class="navbar__link {% if request.endpoint == 'main.index' %}navbar__link--active{% endif %}">Home</a>
+        <a href="{{ url_for('main.index') }}#adventure-calendar" class="navbar__link">Adventures</a>
+        <a href="{{ url_for('main.index') }}#membership" class="navbar__link">Membership</a>
+        <a href="{{ url_for('main.index') }}#community" class="navbar__link">Community</a>
+        <a href="{{ url_for('main.index') }}#contact" class="navbar__link">Contact</a>
       </div>
 
-      <!-- Desktop Auth Actions -->
+      <!-- Auth Actions -->
       <div class="navbar__actions" id="nav-actions">
         {% if current_user and current_user.is_authenticated %}
           {% if current_user.role == 'operator' or current_user.role == 'admin' %}
-            <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline btn--sm" id="nav-dashboard">Dashboard</a>
+            <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline btn--sm">Dashboard</a>
           {% else %}
-            <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline btn--sm" id="nav-dashboard">Dashboard</a>
+            <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline btn--sm">Dashboard</a>
           {% endif %}
-          <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--sm" id="nav-logout">Logout</a>
+          <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--sm">Logout</a>
         {% else %}
-          <a href="{{ url_for('main.login') }}" class="btn btn--outline btn--sm" id="nav-login">Log In</a>
-          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--sm" id="nav-register">Sign Up</a>
+          <a href="{{ url_for('main.login') }}" class="navbar__link" style="padding: var(--space-2) var(--space-4);">Log In</a>
+          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--sm">Sign Up</a>
         {% endif %}
       </div>
 
-      <!-- Hamburger Menu (Mobile) -->
-      <button class="navbar__hamburger" id="navbar-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
+      <!-- Hamburger -->
+      <button class="navbar__hamburger" id="navbar-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
       </button>
     </div>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Drawer -->
     <div class="navbar__mobile-menu" id="mobile-menu">
-      <a href="{{ url_for('main.index') }}" class="navbar__link navbar__link--active">Home</a>
-      <a href="{{ url_for('main.index') }}#featured-tours" class="navbar__link">Explore Tours</a>
-      <a href="{{ url_for('main.index') }}#categories" class="navbar__link">Categories</a>
-      <a href="{{ url_for('main.index') }}#about" class="navbar__link">About</a>
-      <a href="{{ url_for('main.index') }}#contact" class="navbar__link">Contact</a>
-      <div class="navbar__actions">
-        {% if current_user and current_user.is_authenticated %}
-          {% if current_user.role == 'operator' or current_user.role == 'admin' %}
-            <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline btn--lg">Dashboard</a>
+      <div class="navbar__mobile-inner">
+        <!-- Close button -->
+        <button class="navbar__mobile-close" id="mobile-close" aria-label="Close menu">&times;</button>
+
+        <!-- Mobile logo -->
+        <a href="{{ url_for('main.index') }}" class="navbar__mobile-logo">
+          <img src="{{ url_for('static', filename='logo.png') }}" alt="Devine Adventures">
+        </a>
+
+        <!-- Mobile links -->
+        <nav class="navbar__mobile-links">
+          <a href="{{ url_for('main.index') }}" class="navbar__mobile-link">Home</a>
+          <a href="{{ url_for('main.index') }}#adventure-calendar" class="navbar__mobile-link">Adventures</a>
+          <a href="{{ url_for('main.index') }}#membership" class="navbar__mobile-link">Membership</a>
+          <a href="{{ url_for('main.index') }}#community" class="navbar__mobile-link">Community</a>
+          <a href="{{ url_for('main.index') }}#contact" class="navbar__mobile-link">Contact</a>
+        </nav>
+
+        <!-- Mobile auth -->
+        <div class="navbar__mobile-auth">
+          {% if current_user and current_user.is_authenticated %}
+            {% if current_user.role == 'operator' or current_user.role == 'admin' %}
+              <a href="{{ url_for('operator.dashboard') }}" class="btn btn--outline-dark btn--full">Dashboard</a>
+            {% else %}
+              <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline-dark btn--full">Dashboard</a>
+            {% endif %}
+            <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--full">Logout</a>
           {% else %}
-            <a href="{{ url_for('bookings.dashboard') }}" class="btn btn--outline btn--lg">Dashboard</a>
+            <a href="{{ url_for('main.login') }}" class="btn btn--outline-dark btn--full">Log In</a>
+            <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--full">Sign Up</a>
           {% endif %}
-          <a href="{{ url_for('main.logout') }}" class="btn btn--primary btn--lg">Logout</a>
-        {% else %}
-          <a href="{{ url_for('main.login') }}" class="btn btn--outline btn--lg">Log In</a>
-          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--lg">Sign Up</a>
-        {% endif %}
+        </div>
+
+        <!-- Mobile contact info -->
+        <div class="navbar__mobile-contact">
+          <span>+254 700 000 000</span>
+          <span>hello@devineadventures.co.ke</span>
+        </div>
       </div>
     </div>
   </nav>

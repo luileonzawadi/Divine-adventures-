@@ -406,19 +406,9 @@
     </div>
 
     <div class="community-gallery">
-      {% set gallery_imgs = [
-        'https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=600&q=80',
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80',
-        'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=600&q=80',
-        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80',
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
-        'https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80',
-        'https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=600&q=80',
-        'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=600&q=80'
-      ] %}
-      {% for img in gallery_imgs %}
+      {% for n in [1, 5, 10, 15, 20, 25, 30, 35] %}
       <div class="community-gallery__item">
-        <img src="{{ img }}" alt="Community adventure photo" loading="lazy">
+        <img src="{{ url_for('static', filename='images/adventure_' ~ n ~ '.jpeg') }}" alt="Community adventure photo" loading="lazy">
       </div>
       {% endfor %}
     </div>

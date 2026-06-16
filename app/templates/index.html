@@ -13,11 +13,12 @@
   <div class="hero__carousel" id="heroCarousel" aria-label="Adventure photo carousel">
     {% set hero_images = [
       'https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=85',
+      'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=1920&q=85',
       'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1920&q=85',
       'https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=1920&q=85',
-      'https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=1920&q=85',
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=85',
-      'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=1920&q=85'
+      'https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=1920&q=85',
+      'https://images.unsplash.com/photo-1682687982501-1e58ab814714?w=1920&q=85'
     ] %}
     {% for img in hero_images %}
     <div class="hero__slide {% if loop.first %}hero__slide--active{% endif %}"
@@ -44,7 +45,7 @@
 
   <!-- Dot indicators -->
   <div class="hero__dots" id="heroDots" aria-label="Slide indicators">
-    {% for i in range(6) %}
+    {% for i in range(7) %}
     <button class="hero__dot {% if loop.first %}hero__dot--active{% endif %}"
             data-index="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
     {% endfor %}
@@ -166,25 +167,75 @@
 <!-- ============================================
      THE MEMBERSHIP ADVANTAGE
      ============================================ -->
-<section class="section" id="membership">
+<section class="section" id="membership" style="background: var(--color-gray-50);">
   <div class="container">
-    <div class="membership-section">
-      <div>
-        <span class="section-subtitle" style="color: var(--color-forest);">Why Join?</span>
-        <h2 style="margin-bottom: var(--space-6); color: var(--color-forest-dark);">The Membership <span class="text-accent">Advantage</span></h2>
-        <ol class="membership-list">
-          <li>Get over <strong>30 free experiences</strong> monthly as a Devine Adventures member, and enjoy up to <strong>20% off</strong> on all the cool stuff.</li>
-          <li>Pick how you want to pay — <strong>Mpesa, Card, or Apple Pay</strong> — for hassle-free adventures.</li>
-          <li>Pay by the <strong>5th</strong> of the month to keep the good times rolling with exclusive member deals.</li>
-          <li>Create your <a href="{{ url_for('main.register') }}" style="color: var(--color-burnt-orange); font-weight: var(--font-semibold);">account</a>, subscribe, and easily book awesome experiences with a subscription.</li>
-        </ol>
-        <div style="margin-top: var(--space-8);">
-          <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--lg">Become a Member →</a>
+    <div class="membership-layout">
+
+      <!-- LEFT: text + benefit cards -->
+      <div class="membership-content">
+        <span class="section-subtitle">Why Join?</span>
+        <h2 class="membership-title">The Membership <span class="text-accent">Advantage</span></h2>
+        <p class="membership-intro">Join thousands of adventurers who explore Kenya's outdoors every month — affordably, safely, and with great company.</p>
+
+        <div class="membership-benefits">
+
+          <div class="membership-benefit">
+            <div class="membership-benefit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="membership-benefit__body">
+              <strong>30+ Free Experiences Monthly</strong>
+              <p>Access over 30 free adventures every month and enjoy up to 20% off on everything else.</p>
+            </div>
+          </div>
+
+          <div class="membership-benefit">
+            <div class="membership-benefit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <div class="membership-benefit__body">
+              <strong>Flexible Payment Options</strong>
+              <p>Pay via Mpesa, Card, or Apple Pay — whatever works best for you.</p>
+            </div>
+          </div>
+
+          <div class="membership-benefit">
+            <div class="membership-benefit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="membership-benefit__body">
+              <strong>Pay by the 5th, Adventure All Month</strong>
+              <p>Settle your subscription by the 5th to unlock the full month of exclusive member deals.</p>
+            </div>
+          </div>
+
+          <div class="membership-benefit">
+            <div class="membership-benefit__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="membership-benefit__body">
+              <strong>Instant Booking, Great Community</strong>
+              <p><a href="{{ url_for('main.register') }}" style="color: var(--color-burnt-orange); font-weight: var(--font-semibold);">Create your account</a>, subscribe, and join a thriving community of adventurers.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <a href="{{ url_for('main.register') }}" class="btn btn--primary btn--lg" style="margin-top: var(--space-8);">Become a Member</a>
+      </div>
+
+      <!-- RIGHT: stacked images -->
+      <div class="membership-images">
+        <div class="membership-images__primary">
+          <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=900&q=85"
+               alt="Hikers on a trail" loading="lazy">
+        </div>
+        <div class="membership-images__secondary">
+          <img src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=600&q=85"
+               alt="Waterfall in nature" loading="lazy">
         </div>
       </div>
-      <div class="membership-image">
-        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=900&q=85" alt="Happy hikers on a Devine Adventures trip" loading="lazy">
-      </div>
+
     </div>
   </div>
 </section>

@@ -5,10 +5,21 @@
 {% block content %}
 
 <!-- ============================================
-     HERO — Full-screen with adventure image
+     HERO — Full-screen auto-sliding carousel
      ============================================ -->
-<section class="hero" id="hero" style="background-image: url('/static/images/adventure_1.jpeg'); background-size: cover; background-position: center;">
+<section class="hero" id="hero">
+
+  <!-- Carousel slides -->
+  <div class="hero__carousel" id="heroCarousel" aria-label="Adventure photo carousel">
+    {% for i in [3, 7, 11, 18, 24, 30] %}
+    <div class="hero__slide {% if loop.first %}hero__slide--active{% endif %}"
+         style="background-image: url('{{ url_for('static', filename='images/adventure_' ~ i ~ '.jpeg') }}');">
+    </div>
+    {% endfor %}
+  </div>
+
   <div class="hero__overlay"></div>
+
   <div class="hero__content">
     <span class="section-subtitle" style="color: var(--color-burnt-orange-light);">Devine Adventures</span>
     <h1 class="hero__title">
@@ -18,10 +29,19 @@
       Exceptional and affordable outdoor experiences showcasing the best of Kenya's outdoors.
     </p>
     <div class="hero__actions">
-      <a href="#adventure-calendar" class="btn btn--primary btn--lg">View Calendar →</a>
-      <a href="#membership" class="btn btn--outline btn--lg">Become a Member →</a>
+      <a href="#adventure-calendar" class="btn btn--primary btn--lg">View Calendar</a>
+      <a href="#membership" class="btn btn--outline btn--lg">Become a Member</a>
     </div>
   </div>
+
+  <!-- Dot indicators -->
+  <div class="hero__dots" id="heroDots" aria-label="Slide indicators">
+    {% for i in range(6) %}
+    <button class="hero__dot {% if loop.first %}hero__dot--active{% endif %}"
+            data-index="{{ loop.index0 }}" aria-label="Slide {{ loop.index }}"></button>
+    {% endfor %}
+  </div>
+
   <div class="hero__scroll-indicator">
     <span>Scroll to explore</span>
     <div class="scroll-line"></div>
@@ -445,6 +465,43 @@
 {% block scripts %}
 <script>
 /* ============================================
+   HERO CAROUSEL — Auto-advance every 5s
+   ============================================ */
+(function() {
+  const slides = document.querySelectorAll('.hero__slide');
+  const dots   = document.querySelectorAll('.hero__dot');
+  if (!slides.length) return;
+
+  let current = 0;
+
+  function goTo(index) {
+    slides[current].classList.remove('hero__slide--active');
+    dots[current].classList.remove('hero__dot--active');
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('hero__slide--active');
+    dots[current].classList.add('hero__dot--active');
+  }
+
+  // Dot click
+  dots.forEach((dot, i) => dot.addEventListener('click', () => {
+    clearInterval(timer);
+    goTo(i);
+    timer = setInterval(() => goTo(current + 1), 5000);
+  }));
+
+  let timer = setInterval(() => goTo(current + 1), 5000);
+
+  // Pause on hover
+  const hero = document.getElementById('hero');
+  if (hero) {
+    hero.addEventListener('mouseenter', () => clearInterval(timer));
+    hero.addEventListener('mouseleave', () => {
+      timer = setInterval(() => goTo(current + 1), 5000);
+    });
+  }
+})();
+
+/* ============================================
    DIFFICULTY FILTER — Live filter calendar cards
    ============================================ */
 (function() {
@@ -455,7 +512,6 @@
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle active state
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 

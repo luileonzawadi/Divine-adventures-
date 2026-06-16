@@ -2895,3 +2895,117 @@ h6 { font-size: var(--text-lg); }
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ============================================
+   HERO CAROUSEL
+   ============================================ */
+.hero__carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
+}
+
+.hero__slide--active {
+  opacity: 1;
+}
+
+/* Ensure overlay and content sit above carousel */
+.hero__overlay {
+  z-index: 1;
+}
+
+.hero__content {
+  z-index: 2;
+}
+
+.hero__scroll-indicator {
+  z-index: 2;
+}
+
+/* Dot indicators */
+.hero__dots {
+  position: absolute;
+  bottom: var(--space-16);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-2);
+  z-index: 3;
+}
+
+.hero__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--transition-base);
+}
+
+.hero__dot--active {
+  background: var(--color-white);
+  width: 24px;
+}
+
+/* ============================================
+   HERO — Full responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 100svh;
+    min-height: 100vh;
+  }
+
+  .hero__title {
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-base);
+    padding: 0 var(--space-2);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: 0 var(--space-4);
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+
+  .hero__dots {
+    bottom: var(--space-10);
+  }
+
+  .hero__scroll-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__content {
+    padding: 0 var(--space-4);
+  }
+
+  .hero__title {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+  }
+}

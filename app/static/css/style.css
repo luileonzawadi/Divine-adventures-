@@ -110,7 +110,7 @@
   /* Layout */
   --container-max: 1280px;
   --container-wide: 1440px;
-  --navbar-height: 140px;
+  --navbar-height: 200px;
 }
 
 /* --- Reset & Base --- */
@@ -340,7 +340,7 @@ h6 { font-size: var(--text-lg); }
 }
 
 .navbar__logo-img {
-  height: 160px;
+  height: 190px;
   max-width: 100%;
   width: auto;
   object-fit: contain;

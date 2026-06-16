@@ -439,19 +439,19 @@ h6 { font-size: var(--text-lg); }
 
 /* Hamburger wrap for positioning the mini popup */
 .navbar__hamburger-wrap {
-  position: relative;
+  position: static;
   display: none;
 }
 
-/* Mini popup dropdown */
+/* Mini popup dropdown — positioned fixed so it escapes navbar stacking context */
 .navbar__mini-popup {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  width: 220px;
+  position: fixed;
+  top: calc(var(--navbar-top-offset) + 70px);
+  right: 1.5rem;
+  width: 240px;
   background: var(--color-white);
   border-radius: var(--radius-xl);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.22);
   padding: var(--space-3);
   display: flex;
   flex-direction: column;
@@ -460,14 +460,14 @@ h6 { font-size: var(--text-lg); }
   transform: translateY(-8px) scale(0.97);
   pointer-events: none;
   transition: opacity var(--transition-base), transform var(--transition-base);
-  z-index: calc(var(--z-navbar) + 20);
+  z-index: 9999;
 }
 
 .navbar__mini-popup::before {
   content: '';
   position: absolute;
   top: -6px;
-  right: 10px;
+  right: 14px;
   width: 12px;
   height: 12px;
   background: var(--color-white);

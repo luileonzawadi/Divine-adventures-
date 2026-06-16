@@ -55,7 +55,14 @@ function initMobileMenu() {
     e.stopPropagation();
     const isOpen = miniPopup.classList.toggle('open');
     hamburger.classList.toggle('active', isOpen);
-    hamburger.setAttribute('aria-expanded', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+
+    if (isOpen) {
+      // Position popup below the hamburger button
+      const rect = hamburger.getBoundingClientRect();
+      miniPopup.style.top = (rect.bottom + 10) + 'px';
+      miniPopup.style.right = (window.innerWidth - rect.right) + 'px';
+    }
   });
 
   // Close mini popup when clicking outside

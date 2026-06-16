@@ -89,10 +89,33 @@
         {% endif %}
       </div>
 
-      <!-- Hamburger -->
-      <button class="navbar__hamburger" id="navbar-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <!-- Hamburger + Mini Popup -->
+      <div class="navbar__hamburger-wrap">
+        <button class="navbar__hamburger" id="navbar-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+
+        <!-- Mini dropdown popup -->
+        <div class="navbar__mini-popup" id="navbar-mini-popup">
+          <a href="{{ url_for('main.index') }}" class="navbar__mini-link">Home</a>
+          <a href="{{ url_for('main.index') }}#adventure-calendar" class="navbar__mini-link">Adventures</a>
+          <a href="{{ url_for('main.index') }}#membership" class="navbar__mini-link">Membership</a>
+          <a href="{{ url_for('main.index') }}#community" class="navbar__mini-link">Community</a>
+          <a href="{{ url_for('main.index') }}#contact" class="navbar__mini-link">Contact</a>
+          <div class="navbar__mini-divider"></div>
+          {% if current_user and current_user.is_authenticated %}
+            {% if current_user.role == 'operator' or current_user.role == 'admin' %}
+              <a href="{{ url_for('operator.dashboard') }}" class="navbar__mini-link">Dashboard</a>
+            {% else %}
+              <a href="{{ url_for('bookings.dashboard') }}" class="navbar__mini-link">Dashboard</a>
+            {% endif %}
+            <a href="{{ url_for('main.logout') }}" class="navbar__mini-btn navbar__mini-btn--primary">Logout</a>
+          {% else %}
+            <a href="{{ url_for('main.login') }}" class="navbar__mini-btn navbar__mini-btn--outline">Log In</a>
+            <a href="{{ url_for('main.register') }}" class="navbar__mini-btn navbar__mini-btn--primary">Sign Up</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
 
     <!-- Mobile Drawer -->

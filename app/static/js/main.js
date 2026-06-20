@@ -48,36 +48,62 @@ function initMobileMenu() {
   const miniPopup  = document.getElementById('navbar-mini-popup');
   const mobileMenu = document.getElementById('mobile-menu');
   const closeBtn   = document.getElementById('mobile-close');
-  if (!hamburger) return;
+  if (!hamburger || !miniPopup) return;
 
-  // Toggle mini popup on hamburger click
+  let isOpen = false;
+
+  function openPopup() {
+    isOpen = true;
+    miniPopup.style.cssText = [
+      'display: flex',
+      'flex-direction: column',
+      'position: absolute',
+      'top: calc(100% + 8px)',
+      'right: 0',
+      'width: 260px',
+      'max-width: calc(100vw - 1rem)',
+      'background: #ffffff',
+      'border-radius: 12px',
+      'box-shadow: 0 8px 40px rgba(0,0,0,0.22)',
+      'padding: 12px',
+      'z-index: 99999',
+      'gap: 4px',
+      'opacity: 1',
+      'pointer-events: all',
+      'transform: none',
+    ].join(';');
+    hamburger.classList.add('active');
+    hamburger.setAttribute('aria-expanded', 'true');
+  }
+
+  function closePopup() {
+    isOpen = false;
+    miniPopup.style.display = 'none';
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+
+  // Start hidden
+  miniPopup.style.display = 'none';
+
   hamburger.addEventListener('click', (e) => {
     e.stopPropagation();
-    const isOpen = miniPopup.classList.toggle('open');
-    hamburger.classList.toggle('active', isOpen);
-    hamburger.setAttribute('aria-expanded', String(isOpen));
+    isOpen ? closePopup() : openPopup();
   });
 
-  // Close mini popup when clicking outside
+  // Close when clicking outside
   document.addEventListener('click', (e) => {
-    if (!hamburger.closest('.navbar__hamburger-wrap').contains(e.target)) {
-      miniPopup.classList.remove('open');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
+    if (isOpen && !hamburger.closest('.navbar__hamburger-wrap').contains(e.target)) {
+      closePopup();
     }
   });
 
-  // Close mini popup on link click
-  if (miniPopup) {
-    miniPopup.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        miniPopup.classList.remove('open');
-        hamburger.classList.remove('active');
-      });
-    });
-  }
+  // Close on link click
+  miniPopup.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => closePopup());
+  });
 
-  // Side drawer close button (keep for fallback)
+  // Side drawer close button
   if (closeBtn && mobileMenu) {
     closeBtn.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -87,11 +113,7 @@ function initMobileMenu() {
 
   // Close on Escape
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      miniPopup && miniPopup.classList.remove('open');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', 'false');
-    }
+    if (e.key === 'Escape') closePopup();
   });
 }
 

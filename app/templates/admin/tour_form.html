@@ -1,0 +1,127 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Edit Tour' if tour else 'New Tour' }}{% endblock %}
+{% block content %}
+
+<div style="margin-bottom:20px;">
+  <a href="{{ url_for('admin.tours') }}" class="btn-admin btn-admin--outline">← Back to Tours</a>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="admin-card">
+    <div class="admin-card__title">Basic Info</div>
+    <div class="admin-grid-2">
+      <div class="admin-form-group">
+        <label>Title *</label>
+        <input type="text" name="title" value="{{ tour.title if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Operator *</label>
+        <select name="operator_id" required>
+          {% for op in operators %}
+            <option value="{{ op.id }}" {% if tour and tour.operator_id == op.id %}selected{% endif %}>{{ op.company_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="admin-form-group">
+      <label>Short Description</label>
+      <input type="text" name="short_description" value="{{ tour.short_description if tour else '' }}">
+    </div>
+    <div class="admin-form-group">
+      <label>Full Description *</label>
+      <textarea name="description" required>{{ tour.description if tour else '' }}</textarea>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card__title">Details</div>
+    <div class="admin-grid-3">
+      <div class="admin-form-group">
+        <label>Location *</label>
+        <input type="text" name="location" value="{{ tour.location if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Category *</label>
+        <select name="category" required>
+          {% for cat in ['hiking','safari','mountain_climbing','water_sports','cultural','camping','cycling','wildlife','photography'] %}
+            <option value="{{ cat }}" {% if tour and tour.category == cat %}selected{% endif %}>{{ cat | replace('_',' ') | title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="admin-form-group">
+        <label>Difficulty *</label>
+        <select name="difficulty" required>
+          {% for d in ['easy','moderate','hard','extreme'] %}
+            <option value="{{ d }}" {% if tour and tour.difficulty == d %}selected{% endif %}>{{ d | title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="admin-form-group">
+        <label>Price (KES) *</label>
+        <input type="number" step="0.01" name="price_kes" value="{{ tour.price_kes if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Price (USD) *</label>
+        <input type="number" step="0.01" name="price_usd" value="{{ tour.price_usd if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Duration (Days) *</label>
+        <input type="number" name="duration_days" value="{{ tour.duration_days if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Max Group Size *</label>
+        <input type="number" name="max_group_size" value="{{ tour.max_group_size if tour else '' }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Deposit %</label>
+        <input type="number" name="deposit_percent" value="{{ tour.deposit_percent if tour else 100 }}" min="1" max="100">
+      </div>
+      <div class="admin-form-group">
+        <label>Meeting Point</label>
+        <input type="text" name="meeting_point" value="{{ tour.meeting_point if tour else '' }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card__title">Inclusions</div>
+    <div class="admin-grid-2">
+      <div class="admin-form-group">
+        <label>Included (one per line)</label>
+        <textarea name="included_items">{{ tour.included_items if tour else '' }}</textarea>
+      </div>
+      <div class="admin-form-group">
+        <label>Excluded (one per line)</label>
+        <textarea name="excluded_items">{{ tour.excluded_items if tour else '' }}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <div class="admin-card__title">Cover Image</div>
+    {% if tour and tour.cover_image_url %}
+      <img src="{{ tour.cover_image_url }}" style="height:120px; border-radius:8px; object-fit:cover; margin-bottom:12px;">
+    {% endif %}
+    <div class="admin-form-group">
+      <label>Upload New Cover Image</label>
+      <input type="file" name="cover_image" accept="image/*">
+    </div>
+    <div style="display:flex; gap:16px; margin-top:8px;">
+      <label style="display:flex; align-items:center; gap:8px; font-size:14px; cursor:pointer;">
+        <input type="checkbox" name="is_featured" {% if tour and tour.is_featured %}checked{% endif %}> Featured Tour
+      </label>
+      <label style="display:flex; align-items:center; gap:8px; font-size:14px; cursor:pointer;">
+        <input type="checkbox" name="is_active" {% if not tour or tour.is_active %}checked{% endif %}> Active
+      </label>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:12px;">
+    <button type="submit" class="btn-admin btn-admin--primary">{{ 'Save Changes' if tour else 'Create Tour' }}</button>
+    <a href="{{ url_for('admin.tours') }}" class="btn-admin btn-admin--outline">Cancel</a>
+  </div>
+</form>
+
+{% endblock %}

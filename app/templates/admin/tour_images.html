@@ -1,0 +1,40 @@
+{% extends 'admin/base.html' %}
+{% block title %}Images — {{ tour.title }}{% endblock %}
+{% block content %}
+
+<div style="margin-bottom:20px;">
+  <a href="{{ url_for('admin.tours') }}" class="btn-admin btn-admin--outline">← Back to Tours</a>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card__title">Upload Images for "{{ tour.title }}"</div>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="admin-form-group">
+      <label>Select Images (multiple allowed)</label>
+      <input type="file" name="images" accept="image/*" multiple>
+    </div>
+    <button type="submit" class="btn-admin btn-admin--primary">Upload</button>
+  </form>
+</div>
+
+<div class="admin-card">
+  <div class="admin-card__title">Current Images ({{ tour.images.count() }})</div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:16px;">
+    {% for img in tour.images %}
+    <div style="position:relative; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+      <img src="{{ img.image_url }}" style="width:100%; height:120px; object-fit:cover; display:block;">
+      <div style="padding:8px; background:white; display:flex; justify-content:center;">
+        <form method="POST" action="{{ url_for('admin.delete_tour_image', img_id=img.id) }}" onsubmit="return confirm('Delete image?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="btn-admin btn-admin--danger" style="font-size:12px; padding:4px 10px;">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p style="color:#9CA3AF; font-size:14px;">No images uploaded yet.</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

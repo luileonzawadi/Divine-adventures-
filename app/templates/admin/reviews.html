@@ -1,0 +1,50 @@
+{% extends 'admin/base.html' %}
+{% block title %}Reviews{% endblock %}
+{% block content %}
+
+<div class="admin-card" style="padding:0; overflow:hidden;">
+  <div style="padding:16px 20px; border-bottom:1px solid #f1f3f5;">
+    <strong style="font-size:15px;">All Reviews</strong>
+  </div>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Traveler</th>
+        <th>Tour</th>
+        <th>Rating</th>
+        <th>Comment</th>
+        <th>Flagged</th>
+        <th>Approved</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in all_reviews %}
+      <tr>
+        <td>{{ r.user.full_name }}</td>
+        <td>{{ r.tour.title }}</td>
+        <td style="color:#F3BF1D; font-size:16px;">{{ r.star_display }}</td>
+        <td style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ r.comment }}</td>
+        <td>{% if r.is_flagged %}<span class="badge-status badge-cancelled">Flagged</span>{% else %}—{% endif %}</td>
+        <td>{% if r.is_approved %}<span class="badge-status badge-confirmed">Yes</span>{% else %}<span class="badge-status badge-cancelled">No</span>{% endif %}</td>
+        <td style="display:flex; gap:6px; flex-wrap:wrap;">
+          <form method="POST" action="{{ url_for('reviews.admin_approve_review', review_id=r.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-admin btn-admin--primary" style="font-size:11px; padding:4px 10px;">
+              {{ 'Hide' if r.is_approved else 'Approve' }}
+            </button>
+          </form>
+          <form method="POST" action="{{ url_for('reviews.admin_delete_review', review_id=r.id) }}" onsubmit="return confirm('Delete this review?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-admin btn-admin--danger" style="font-size:11px; padding:4px 10px;">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center; color:#9CA3AF; padding:40px;">No reviews yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

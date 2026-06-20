@@ -1,0 +1,57 @@
+{% extends 'admin/base.html' %}
+{% block title %}Users{% endblock %}
+{% block content %}
+
+<div class="admin-card" style="padding:0; overflow:hidden;">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td><strong>{{ user.full_name }}</strong><br><span style="color:#9CA3AF; font-size:12px;">@{{ user.username }}</span></td>
+        <td>{{ user.email }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin.change_role', user_id=user.id) }}" style="display:flex; gap:6px; align-items:center;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <select name="role" style="padding:4px 8px; border:1px solid #e5e7eb; border-radius:6px; font-size:12px;">
+              {% for r in ['traveler','operator','admin'] %}
+                <option value="{{ r }}" {% if user.role == r %}selected{% endif %}>{{ r | title }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn-admin btn-admin--outline" style="font-size:11px; padding:4px 8px;">Save</button>
+          </form>
+        </td>
+        <td>
+          <span class="badge-status {% if user.is_active %}badge-confirmed{% else %}badge-cancelled{% endif %}">
+            {{ 'Active' if user.is_active else 'Inactive' }}
+          </span>
+        </td>
+        <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+        <td>
+          {% if user.id != current_user.id %}
+          <form method="POST" action="{{ url_for('admin.toggle_user', user_id=user.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-admin {% if user.is_active %}btn-admin--danger{% else %}btn-admin--primary{% endif %}" style="font-size:12px;">
+              {{ 'Deactivate' if user.is_active else 'Activate' }}
+            </button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center; color:#9CA3AF; padding:40px;">No users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

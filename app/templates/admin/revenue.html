@@ -1,0 +1,58 @@
+{% extends 'admin/base.html' %}
+{% block title %}Revenue{% endblock %}
+{% block content %}
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-card__value">KES {{ "{:,.0f}".format(unified_kes) }}</div>
+    <div class="stat-card__label">Total Revenue (KES)</div>
+  </div>
+  <div class="stat-card" style="border-color:#2563EB;">
+    <div class="stat-card__value">${{ "{:,.2f}".format(unified_usd) }}</div>
+    <div class="stat-card__label">Total Revenue (USD)</div>
+  </div>
+  <div class="stat-card" style="border-color:#E85D04;">
+    <div class="stat-card__value">KES {{ "{:,.0f}".format(mpesa_total) }}</div>
+    <div class="stat-card__label">M-Pesa Payments</div>
+  </div>
+  <div class="stat-card" style="border-color:#7C3AED;">
+    <div class="stat-card__value">${{ "{:,.2f}".format(stripe_total) }}</div>
+    <div class="stat-card__label">Stripe Payments</div>
+  </div>
+</div>
+
+<div class="admin-card" style="padding:0; overflow:hidden;">
+  <div style="padding:16px 20px; border-bottom:1px solid #f1f3f5;">
+    <strong style="font-size:15px;">Payment Transactions</strong>
+  </div>
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Booking Ref</th>
+        <th>Traveler</th>
+        <th>Method</th>
+        <th>Amount</th>
+        <th>Currency</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in payments %}
+      <tr>
+        <td><strong>{{ p.booking.booking_reference if p.booking else 'N/A' }}</strong></td>
+        <td>{{ p.booking.traveler_name if p.booking else 'N/A' }}</td>
+        <td><span class="badge-status {% if p.method == 'stripe' %}badge-completed{% else %}badge-confirmed{% endif %}">{{ p.method | upper }}</span></td>
+        <td>{{ "{:,.2f}".format(p.amount) }}</td>
+        <td>{{ p.currency | upper }}</td>
+        <td><span class="badge-status badge-{{ p.status }}">{{ p.status }}</span></td>
+        <td>{{ p.created_at.strftime('%d %b %Y') }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="text-align:center; color:#9CA3AF; padding:40px;">No completed payments yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

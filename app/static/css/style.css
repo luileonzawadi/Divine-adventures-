@@ -3760,10 +3760,8 @@ html, body {
 }
 
 /* ============================================
-   MOBILE — Hero gap & dropdown fix
+   MOBILE — Hero gap fix
    ============================================ */
-
-/* Reduce gap between navbar and first section */
 @media (max-width: 768px) {
   main#main-content {
     padding-top: 5px !important;
@@ -3776,7 +3774,6 @@ html, body {
     padding-top: 0 !important;
   }
 
-  /* Popup — absolute to hamburger wrap, not fixed to viewport */
   .navbar__hamburger-wrap {
     position: relative !important;
   }
@@ -3789,15 +3786,14 @@ html, body {
     width: 260px !important;
     max-width: calc(100vw - 1rem) !important;
     z-index: 99999 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transform: translateY(-8px) scale(0.97) !important;
-    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    display: none;
+    opacity: 1;
+    transform: none;
+    pointer-events: all;
   }
 
   .navbar__mini-popup.open {
-    opacity: 1 !important;
-    pointer-events: all !important;
-    transform: translateY(0) scale(1) !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 }

@@ -3660,3 +3660,101 @@ html, body {
     color: var(--color-white) !important;
   }
 }
+
+/* ============================================
+   NAVBAR — Remove pill shape, full width bar
+   ============================================ */
+.navbar,
+.navbar--solid {
+  border-radius: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  transform: none !important;
+}
+
+/* ============================================
+   NAVBAR — White with dark text
+   ============================================ */
+.navbar,
+.navbar--solid {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.navbar__link {
+  color: var(--color-forest-dark) !important;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--color-burnt-orange) !important;
+}
+
+.navbar__hamburger span {
+  background-color: var(--color-forest-dark) !important;
+}
+
+.navbar__hamburger {
+  border-color: rgba(0,0,0,0.15) !important;
+  background: rgba(0,0,0,0.05) !important;
+}
+
+.btn--outline {
+  color: var(--color-forest-dark) !important;
+  border-color: var(--color-forest-dark) !important;
+}
+
+.btn--outline:hover {
+  background: var(--color-forest-dark) !important;
+  color: var(--color-white) !important;
+}
+
+/* ============================================
+   SUBSCRIPTION PLANS — Desktop spacing fix
+   ============================================ */
+@media (min-width: 769px) {
+  .plans-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: var(--space-10) !important;
+    padding: 0 var(--space-6) !important;
+  }
+
+  .plan-card {
+    padding: var(--space-10) var(--space-8) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .plans-grid {
+    gap: var(--space-12) !important;
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* ============================================
+   DEVINE SHOP — Desktop spacing fix
+   ============================================ */
+@media (min-width: 769px) {
+  .shop-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: var(--space-8) !important;
+    padding: 0 var(--space-6) !important;
+  }
+
+  .shop-card__body {
+    padding: var(--space-5) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shop-grid {
+    gap: var(--space-10) !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+  }
+}

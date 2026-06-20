@@ -1,6 +1,6 @@
 """Barrel export all models for convenient imports."""
 from app.models.user import User, TourOperator
-from app.models.tour import Tour, TourDate, TourImage, Itinerary
+from app.models.tour import Tour, TourDate, TourImage, Itinerary, CommunityPhoto, ShopItem
 from app.models.booking import Booking, Review, Waitlist, Payment, ReviewPhoto
 
 __all__ = [
@@ -10,6 +10,8 @@ __all__ = [
     'TourDate',
     'TourImage',
     'Itinerary',
+    'CommunityPhoto',
+    'ShopItem',
     'Booking',
     'Review',
     'Waitlist',

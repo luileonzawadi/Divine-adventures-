@@ -2,7 +2,23 @@
 {% block title %}Sign Up — Devine Adventures{% endblock %}
 
 {% block head %}
-<style>.page-enter { animation: none; }</style>
+<style>
+  .page-enter { animation: none; }
+
+  .pw-wrap { position: relative; }
+  .pw-wrap input { padding-right: 42px; }
+  .pw-toggle {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 0;
+    color: #9CA3AF; display: flex; align-items: center;
+    transition: color 0.15s;
+  }
+  .pw-toggle:hover { color: #374151; }
+
+  .pw-strength { margin-top: 5px; height: 4px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+  .pw-strength__bar { height: 100%; border-radius: 999px; width: 0; transition: width 0.3s, background 0.3s; }
+  .pw-hint { font-size: 11px; margin-top: 4px; color: #9CA3AF; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -10,36 +26,85 @@
      style="background-image: url('https://images.unsplash.com/photo-1504432842672-1a79f78e4084?w=1600&q=80');">
   <div class="auth-scene__overlay"></div>
 
-  <div class="auth-modal">
+  <div class="auth-modal auth-modal--wide">
 
     <div class="auth-modal__header">
       <div class="auth-modal__eyebrow">Join us</div>
       <h2 class="auth-modal__title">Create account</h2>
+      <p class="auth-modal__sub">Start your adventure today</p>
     </div>
-
-
-    <input type="hidden" name="role" value="traveler" form="reg-form">
-
 
     <form method="POST" action="{{ url_for('main.register') }}" id="reg-form" novalidate>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="role" id="role-input" value="traveler">
+
+      <!-- Role selector -->
+      <div class="auth-modal__roles" style="margin-bottom:16px;">
+        <label class="auth-modal__role">
+          <input type="radio" name="_role_ui" value="traveler" checked>
+          <div class="auth-modal__role-face on" data-role="traveler">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <div><strong>Traveler</strong><span>Book adventures</span></div>
+          </div>
+        </label>
+        <label class="auth-modal__role">
+          <input type="radio" name="_role_ui" value="operator">
+          <div class="auth-modal__role-face" data-role="operator">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <div><strong>Operator</strong><span>List tours</span></div>
+          </div>
+        </label>
+      </div>
 
       <div class="auth-modal__row2">
         <div class="auth-modal__field">
-          <label class="auth-modal__label" for="name">Name</label>
-          <input class="auth-modal__input" type="text" id="name" name="name" placeholder="Jane Doe" required autocomplete="name">
+          <label class="auth-modal__label" for="first_name">First Name</label>
+          <input class="auth-modal__input" type="text" id="first_name" name="first_name"
+                 placeholder="Jane" required autocomplete="given-name">
+        </div>
+        <div class="auth-modal__field">
+          <label class="auth-modal__label" for="last_name">Last Name</label>
+          <input class="auth-modal__input" type="text" id="last_name" name="last_name"
+                 placeholder="Doe" required autocomplete="family-name">
         </div>
       </div>
-      <div class="auth-modal__row2">
-        <div class="auth-modal__field">
-          <label class="auth-modal__label" for="email">Email</label>
-          <input class="auth-modal__input" type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
-        </div>
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="username">Username</label>
+        <input class="auth-modal__input" type="text" id="username" name="username"
+               placeholder="janedoe" required autocomplete="username">
       </div>
-      <div class="auth-modal__row2">
-        <div class="auth-modal__field">
-          <label class="auth-modal__label" for="password">Password</label>
-          <input class="auth-modal__input" type="password" id="password" name="password" placeholder="Min. 8 chars" required minlength="8" autocomplete="new-password">
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="email">Email</label>
+        <input class="auth-modal__input" type="email" id="email" name="email"
+               placeholder="you@example.com" required autocomplete="email">
+      </div>
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="password">Password</label>
+        <div class="pw-wrap">
+          <input class="auth-modal__input" type="password" id="password" name="password"
+                 placeholder="Min. 8 characters" required minlength="8"
+                 autocomplete="new-password" oninput="checkStrength(this.value)">
+          <button type="button" class="pw-toggle" onclick="togglePw('password', this)" aria-label="Show password">
+            <svg id="eye-password" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeoff-password" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+        <div class="pw-strength"><div class="pw-strength__bar" id="strengthBar"></div></div>
+        <div class="pw-hint" id="strengthHint">Use 8+ characters with letters and numbers</div>
+      </div>
+
+      <div class="auth-modal__field">
+        <label class="auth-modal__label" for="confirm_password">Confirm Password</label>
+        <div class="pw-wrap">
+          <input class="auth-modal__input" type="password" id="confirm_password" name="confirm_password"
+                 placeholder="Repeat your password" required autocomplete="new-password">
+          <button type="button" class="pw-toggle" onclick="togglePw('confirm_password', this)" aria-label="Show password">
+            <svg id="eye-confirm_password" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg id="eyeoff-confirm_password" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
         </div>
       </div>
 
@@ -54,16 +119,49 @@
   </div>
 </div>
 
-{% endblock %}
-
-{% block scripts %}
 <script>
+  // Show/hide password
+  function togglePw(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    document.getElementById('eye-' + fieldId).style.display = isHidden ? 'none' : 'block';
+    document.getElementById('eyeoff-' + fieldId).style.display = isHidden ? 'block' : 'none';
+  }
+
+  // Password strength
+  function checkStrength(val) {
+    const bar = document.getElementById('strengthBar');
+    const hint = document.getElementById('strengthHint');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { w: '0%',   bg: '#e5e7eb', text: 'Use 8+ characters with letters and numbers' },
+      { w: '25%',  bg: '#DC2626', text: 'Weak — add numbers or symbols' },
+      { w: '50%',  bg: '#D97706', text: 'Fair — try adding uppercase letters' },
+      { w: '75%',  bg: '#2563EB', text: 'Good — almost there!' },
+      { w: '100%', bg: '#059669', text: 'Strong password ✓' },
+    ];
+    const l = val.length === 0 ? levels[0] : levels[score];
+    bar.style.width = l.w;
+    bar.style.background = l.bg;
+    hint.textContent = l.text;
+    hint.style.color = l.bg === '#e5e7eb' ? '#9CA3AF' : l.bg;
+  }
+
+  // Role selector
   document.querySelectorAll('.auth-modal__role input').forEach(r => {
     r.addEventListener('change', () => {
       document.querySelectorAll('.auth-modal__role-face').forEach(f => f.classList.remove('on'));
-      if (r.checked) r.closest('.auth-modal__role').querySelector('.auth-modal__role-face').classList.add('on');
+      if (r.checked) {
+        r.closest('.auth-modal__role').querySelector('.auth-modal__role-face').classList.add('on');
+        document.getElementById('role-input').value = r.value;
+      }
     });
-    if (r.checked) r.closest('.auth-modal__role').querySelector('.auth-modal__role-face').classList.add('on');
   });
 </script>
 {% endblock %}

@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 from flask import Blueprint, render_template, abort, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from app.models import Payment, Booking, Tour, TourImage
+from app.models import Payment, Booking, Tour, TourImage, CommunityPhoto, ShopItem
 from app.models.user import User, TourOperator
 from app.extensions import db
 
@@ -285,3 +285,106 @@ def revenue():
         stripe_total=stripe_total, mpesa_total=mpesa_total,
         unified_kes=unified_kes, unified_usd=unified_usd,
         exchange_rate=EXCHANGE_RATE)
+
+
+# ── Community Photos ──────────────────────────────────────────────────────────
+
+@admin_bp.route('/admin/community', methods=['GET', 'POST'])
+@login_required
+def community_photos():
+    admin_required()
+    if request.method == 'POST':
+        files = request.files.getlist('photos')
+        count = 0
+        for f in files:
+            if f and f.filename:
+                url = upload_image(f)
+                if url:
+                    caption = request.form.get('caption', '')
+                    db.session.add(CommunityPhoto(image_url=url, caption=caption))
+                    count += 1
+        db.session.commit()
+        flash(f'{count} photo(s) uploaded.', 'success')
+        return redirect(url_for('admin.community_photos'))
+    photos = CommunityPhoto.query.order_by(CommunityPhoto.sort_order, CommunityPhoto.created_at.desc()).all()
+    return render_template('admin/community_photos.html', photos=photos)
+
+
+@admin_bp.route('/admin/community/<int:photo_id>/toggle', methods=['POST'])
+@login_required
+def toggle_community_photo(photo_id):
+    admin_required()
+    photo = CommunityPhoto.query.get_or_404(photo_id)
+    photo.is_active = not photo.is_active
+    db.session.commit()
+    flash('Photo visibility updated.', 'success')
+    return redirect(url_for('admin.community_photos'))
+
+
+@admin_bp.route('/admin/community/<int:photo_id>/delete', methods=['POST'])
+@login_required
+def delete_community_photo(photo_id):
+    admin_required()
+    photo = CommunityPhoto.query.get_or_404(photo_id)
+    db.session.delete(photo)
+    db.session.commit()
+    flash('Photo deleted.', 'success')
+    return redirect(url_for('admin.community_photos'))
+
+
+# ── Shop Items ────────────────────────────────────────────────────────────────
+
+@admin_bp.route('/admin/shop', methods=['GET', 'POST'])
+@login_required
+def shop_items():
+    admin_required()
+    if request.method == 'POST':
+        f = request.files.get('image')
+        image_url = upload_image(f) if f and f.filename else None
+        item = ShopItem(
+            name=request.form.get('name'),
+            description=request.form.get('description'),
+            price_kes=request.form.get('price_kes') or 0,
+            buy_link=request.form.get('buy_link'),
+            is_active='is_active' in request.form,
+            image_url=image_url,
+        )
+        db.session.add(item)
+        db.session.commit()
+        flash('Shop item added.', 'success')
+        return redirect(url_for('admin.shop_items'))
+    items = ShopItem.query.order_by(ShopItem.sort_order, ShopItem.created_at.desc()).all()
+    return render_template('admin/shop_items.html', items=items)
+
+
+@admin_bp.route('/admin/shop/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_shop_item(item_id):
+    admin_required()
+    item = ShopItem.query.get_or_404(item_id)
+    if request.method == 'POST':
+        item.name = request.form.get('name', item.name)
+        item.description = request.form.get('description', item.description)
+        item.price_kes = request.form.get('price_kes') or item.price_kes
+        item.buy_link = request.form.get('buy_link', item.buy_link)
+        item.is_active = 'is_active' in request.form
+        f = request.files.get('image')
+        if f and f.filename:
+            url = upload_image(f)
+            if url:
+                item.image_url = url
+        db.session.commit()
+        flash('Shop item updated.', 'success')
+        return redirect(url_for('admin.shop_items'))
+    return render_template('admin/shop_item_form.html', item=item)
+
+
+@admin_bp.route('/admin/shop/<int:item_id>/delete', methods=['POST'])
+@login_required
+def delete_shop_item(item_id):
+    admin_required()
+    item = ShopItem.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    flash('Shop item deleted.', 'success')
+    return redirect(url_for('admin.shop_items'))

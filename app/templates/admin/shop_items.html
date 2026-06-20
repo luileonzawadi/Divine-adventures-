@@ -1,0 +1,141 @@
+{% extends 'admin/base.html' %}
+{% block title %}Devine Shop{% endblock %}
+{% block page_title %}Adventure Shop{% endblock %}
+{% block content %}
+
+<style>
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:800; color:#0F3B1C; margin:0 0 4px; }
+  .page-header p { font-size:13px; color:#6B7280; margin:0; }
+
+  .shop-layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .item-card {
+    background:white; border-radius:12px; overflow:hidden;
+    box-shadow:0 1px 4px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s, transform 0.2s;
+    display:flex; flex-direction:column;
+  }
+  .item-card:hover { box-shadow:0 4px 16px rgba(0,0,0,0.1); transform:translateY(-2px); }
+  .item-card__img { width:100%; height:160px; object-fit:cover; display:block; background:#f3f4f6; }
+  .item-card__img-placeholder {
+    width:100%; height:160px; background:linear-gradient(135deg,#e5e7eb,#d1d5db);
+    display:flex; align-items:center; justify-content:center; color:#9CA3AF;
+  }
+  .item-card__body { padding:12px 14px; flex:1; display:flex; flex-direction:column; gap:4px; }
+  .item-card__name { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:#0F3B1C; }
+  .item-card__price { font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; color:#E85D04; }
+  .item-card__desc { font-size:12px; color:#6B7280; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; flex:1; }
+  .item-card__status { display:inline-block; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; text-transform:uppercase; }
+  .item-card__actions { display:flex; gap:6px; padding:10px 14px; border-top:1px solid #f1f3f5; background:#fafafa; }
+
+  .add-form { position:sticky; top:80px; }
+
+  .empty-state { grid-column:1/-1; text-align:center; padding:64px 24px; background:white; border-radius:14px; border:2px dashed #e5e7eb; }
+  .empty-state h3 { font-family:'Montserrat',sans-serif; color:#374151; margin:0 0 8px; }
+  .empty-state p { color:#9CA3AF; font-size:14px; margin:0; }
+
+  @media (max-width: 900px) {
+    .shop-layout { grid-template-columns: 1fr; }
+    .add-form { position: static; }
+  }
+</style>
+
+<div class="page-header">
+  <h1>Devine Shop</h1>
+  <p>{{ items | length }} item{{ 's' if items | length != 1 }} — shown in the Devine Shop section on the homepage</p>
+</div>
+
+<div class="shop-layout">
+  <!-- Items Grid -->
+  <div>
+    {% if items %}
+    <div class="items-grid">
+      {% for item in items %}
+      <div class="item-card">
+        {% if item.image_url %}
+          <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-card__img">
+        {% else %}
+          <div class="item-card__img-placeholder">
+            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+        {% endif %}
+        <div class="item-card__body">
+          <span class="item-card__status" style="background:{% if item.is_active %}rgba(5,150,105,0.1){% else %}rgba(220,38,38,0.1){% endif %}; color:{% if item.is_active %}#059669{% else %}#DC2626{% endif %};">
+            {{ 'Active' if item.is_active else 'Hidden' }}
+          </span>
+          <div class="item-card__name">{{ item.name }}</div>
+          <div class="item-card__price">KES {{ "{:,.0f}".format(item.price_kes) }}</div>
+          {% if item.description %}
+            <div class="item-card__desc">{{ item.description }}</div>
+          {% endif %}
+        </div>
+        <div class="item-card__actions">
+          <a href="{{ url_for('admin.edit_shop_item', item_id=item.id) }}" class="btn-admin btn-admin--outline" style="flex:1; justify-content:center; font-size:12px;">
+            Edit
+          </a>
+          <form method="POST" action="{{ url_for('admin.delete_shop_item', item_id=item.id) }}" onsubmit="return confirm('Delete {{ item.name }}?');" style="margin:0;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-admin btn-admin--danger" style="padding:6px 10px;">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2 2 0 0 1-2,2H8a2 2 0 0 1-2-2L5,6"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <svg width="48" height="48" fill="none" stroke="#d1d5db" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 16px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <h3>No Shop Items Yet</h3>
+      <p>Add your first product using the form on the right.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Add Form -->
+  <div class="add-form">
+    <div class="admin-card" style="margin-bottom:0;">
+      <div class="admin-card__title">Add New Item</div>
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="admin-form-group">
+          <label>Product Name *</label>
+          <input type="text" name="name" required placeholder="e.g. Devine Adventures T-Shirt">
+        </div>
+        <div class="admin-form-group">
+          <label>Description</label>
+          <textarea name="description" rows="3" placeholder="Short product description..."></textarea>
+        </div>
+        <div class="admin-form-group">
+          <label>Price (KES)</label>
+          <input type="number" name="price_kes" min="0" step="0.01" placeholder="0">
+        </div>
+        <div class="admin-form-group">
+          <label>Buy / Order Link</label>
+          <input type="url" name="buy_link" placeholder="https://...">
+        </div>
+        <div class="admin-form-group">
+          <label>Product Image</label>
+          <input type="file" name="image" accept="image/*" style="padding:6px; font-size:13px;">
+        </div>
+        <div class="admin-form-group" style="margin-bottom:20px;">
+          <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:13px; cursor:pointer;">
+            <input type="checkbox" name="is_active" checked style="width:15px; height:15px; accent-color:#1F6C36;">
+            Show on homepage
+          </label>
+        </div>
+        <button type="submit" class="btn-admin btn-admin--primary" style="width:100%; justify-content:center;">
+          Add Item
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

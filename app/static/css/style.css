@@ -355,7 +355,7 @@ h6 { font-size: var(--text-lg); }
 }
 
 .navbar__logo-img {
-  height: 54px;
+  height: 75px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -661,7 +661,7 @@ h6 { font-size: var(--text-lg); }
 }
 
 .navbar__mobile-logo img {
-  height: 60px;
+  height: 80px;
   width: auto;
 }
 
@@ -1128,7 +1128,7 @@ h6 { font-size: var(--text-lg); }
 }
 
 .footer__logo-img {
-  height: 80px;
+  height: 110px;
   width: auto;
   display: block;
   margin-bottom: var(--space-4);
@@ -1469,8 +1469,8 @@ h6 { font-size: var(--text-lg); }
   }
 
   .navbar__logo-img {
-    height: 42px;
-    max-width: 130px;
+    height: 58px;
+    max-width: 170px;
   }
 
   /* page content offset so it starts below pill */
@@ -1479,7 +1479,7 @@ h6 { font-size: var(--text-lg); }
   }
 
   .footer__logo-img {
-    height: 50px;
+    height: 70px;
   }
 
   /* Layout */
@@ -1640,13 +1640,13 @@ h6 { font-size: var(--text-lg); }
   }
 
   .navbar__logo-img {
-    height: 36px;
-    max-width: 110px;
+    height: 52px;
+    max-width: 150px;
     object-fit: contain;
   }
 
   .footer__logo-img {
-    height: 40px;
+    height: 58px;
   }
 
   .card__image {
@@ -3510,9 +3510,9 @@ html, body {
   }
 
   .navbar__logo-img {
-    height: 52px !important;
+    height: 70px !important;
     width: auto !important;
-    max-width: 160px !important;
+    max-width: 200px !important;
   }
 }
 
@@ -3556,9 +3556,9 @@ html, body {
   }
 
   .navbar__logo-img {
-    height: 52px !important;
+    height: 70px !important;
     width: auto !important;
-    max-width: 150px !important;
+    max-width: 185px !important;
     object-fit: contain !important;
   }
 
@@ -3645,9 +3645,9 @@ html, body {
   }
 
   .navbar__logo-img {
-    height: 80px !important;
+    height: 100px !important;
     width: auto !important;
-    max-width: 200px !important;
+    max-width: 250px !important;
     object-fit: contain !important;
   }
 

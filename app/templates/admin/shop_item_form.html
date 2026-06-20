@@ -1,0 +1,60 @@
+{% extends 'admin/base.html' %}
+{% block title %}Edit Shop Item{% endblock %}
+{% block page_title %}Edit Shop Item{% endblock %}
+{% block content %}
+
+<div style="max-width:600px;">
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+    <a href="{{ url_for('admin.shop_items') }}" class="btn-admin btn-admin--outline">← Back</a>
+    <div>
+      <h1 style="font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; color:#0F3B1C; margin:0 0 2px;">Edit Shop Item</h1>
+      <p style="font-size:13px; color:#6B7280; margin:0;">{{ item.name }}</p>
+    </div>
+  </div>
+
+  <div class="admin-card">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      {% if item.image_url %}
+      <div class="admin-form-group">
+        <label>Current Image</label>
+        <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; display:block;">
+      </div>
+      {% endif %}
+
+      <div class="admin-form-group">
+        <label>Replace Image</label>
+        <input type="file" name="image" accept="image/*" style="padding:6px; font-size:13px;">
+      </div>
+      <div class="admin-form-group">
+        <label>Product Name *</label>
+        <input type="text" name="name" value="{{ item.name }}" required>
+      </div>
+      <div class="admin-form-group">
+        <label>Description</label>
+        <textarea name="description" rows="3">{{ item.description or '' }}</textarea>
+      </div>
+      <div class="admin-form-group">
+        <label>Price (KES)</label>
+        <input type="number" name="price_kes" min="0" step="0.01" value="{{ item.price_kes }}">
+      </div>
+      <div class="admin-form-group">
+        <label>Buy / Order Link</label>
+        <input type="url" name="buy_link" value="{{ item.buy_link or '' }}" placeholder="https://...">
+      </div>
+      <div class="admin-form-group" style="margin-bottom:24px;">
+        <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-size:13px; cursor:pointer;">
+          <input type="checkbox" name="is_active" {% if item.is_active %}checked{% endif %} style="width:15px; height:15px; accent-color:#1F6C36;">
+          Show on homepage
+        </label>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="btn-admin btn-admin--primary">Save Changes</button>
+        <a href="{{ url_for('admin.shop_items') }}" class="btn-admin btn-admin--outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

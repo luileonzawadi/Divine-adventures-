@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} | Devine Adventures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8f9fa; color: #1A1A2E; min-height: 100vh; }
+
+    /* ── Portal Topbar ── */
+    .portal-topbar {
+      background: #fff;
+      border-bottom: 1px solid #e9ecef;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 16px;
+    }
+    .portal-topbar__left { display: flex; align-items: center; gap: 12px; }
+    .portal-topbar__logo img { height: 48px; width: auto; display: block; }
+    .portal-topbar__divider { width: 1px; height: 28px; background: #e9ecef; }
+    .portal-topbar__title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: #6B7280; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .portal-topbar__right { display: flex; align-items: center; gap: 12px; }
+    .portal-topbar__user {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: #374151;
+    }
+    .portal-topbar__avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #1F6C36, #2A8A45);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .portal-topbar__name { font-weight: 600; }
+    .portal-topbar__role {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 2px 8px; border-radius: 999px;
+      background: rgba(31,108,54,0.1); color: #1F6C36;
+    }
+    .portal-topbar__logout {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: #6B7280;
+      text-decoration: none; border: 1.5px solid #e5e7eb;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .portal-topbar__logout:hover { border-color: #DC2626; color: #DC2626; background: rgba(220,38,38,0.04); }
+    .portal-topbar__site-link {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; color: #6B7280;
+      text-decoration: none; border: 1.5px solid #e5e7eb;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .portal-topbar__site-link:hover { border-color: #1F6C36; color: #1F6C36; background: rgba(31,108,54,0.04); }
+
+    /* ── Portal Layout ── */
+    .portal-layout { display: flex; min-height: calc(100vh - 64px); }
+
+    /* ── Sidebar ── */
+    .portal-sidebar {
+      width: 220px; flex-shrink: 0;
+      background: #fff; border-right: 1px solid #e9ecef;
+      padding: 24px 12px;
+      position: sticky; top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+    .portal-sidebar__label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #9CA3AF; padding: 0 10px; margin-bottom: 6px; margin-top: 16px;
+    }
+    .portal-sidebar__label:first-child { margin-top: 0; }
+    .portal-nav-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      color: #374151; font-size: 14px; font-weight: 500;
+      text-decoration: none; transition: all 0.15s; margin-bottom: 2px;
+    }
+    .portal-nav-link svg { flex-shrink: 0; color: #9CA3AF; transition: color 0.15s; }
+    .portal-nav-link:hover { background: #f3f4f6; color: #0F3B1C; }
+    .portal-nav-link:hover svg { color: #0F3B1C; }
+    .portal-nav-link.active { background: rgba(31,108,54,0.08); color: #0F3B1C; font-weight: 600; }
+    .portal-nav-link.active svg { color: #1F6C36; }
+    .portal-nav-link.danger { color: #DC2626; }
+    .portal-nav-link.danger svg { color: #DC2626; }
+    .portal-nav-link.danger:hover { background: rgba(220,38,38,0.06); }
+
+    /* ── Main Content ── */
+    .portal-main { flex: 1; padding: 32px; overflow-x: hidden; min-width: 0; }
+
+    /* Flash messages */
+    .portal-flash { padding: 0 32px; margin-top: 16px; }
+    .portal-flash-msg {
+      padding: 12px 16px; border-radius: 8px; margin-bottom: 8px;
+      font-size: 14px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Hamburger for mobile */
+    .portal-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .portal-hamburger span { display: block; width: 22px; height: 2px; background: #374151; border-radius: 2px; }
+
+    /* Backdrop */
+    .portal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 98;
+    }
+    .portal-backdrop.open { display: block; }
+
+    @media (max-width: 768px) {
+      .portal-topbar { padding: 0 16px; height: 56px; }
+      .portal-topbar__name, .portal-topbar__role, .portal-topbar__site-link { display: none; }
+      .portal-topbar__logo img { height: 38px; }
+      .portal-hamburger { display: flex; }
+
+      .portal-sidebar {
+        position: fixed; top: 0; left: 0; height: 100vh;
+        z-index: 99; transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+      }
+      .portal-sidebar.open { transform: translateX(0); }
+
+      .portal-main { padding: 16px; }
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<div class="portal-backdrop" id="portalBackdrop" onclick="closeSidebar()"></div>
+
+<!-- Topbar -->
+<header class="portal-topbar">
+  <div class="portal-topbar__left">
+    <button class="portal-hamburger" onclick="openSidebar()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="{{ url_for('main.index') }}" class="portal-topbar__logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Devine Adventures">
+    </a>
+    <div class="portal-topbar__divider"></div>
+    <span class="portal-topbar__title">{% block portal_title %}Portal{% endblock %}</span>
+  </div>
+  <div class="portal-topbar__right">
+    <div class="portal-topbar__user">
+      <div class="portal-topbar__avatar">{{ current_user.first_name[0] }}{{ current_user.last_name[0] }}</div>
+      <span class="portal-topbar__name">{{ current_user.first_name }}</span>
+      <span class="portal-topbar__role">{{ current_user.role }}</span>
+    </div>
+    <a href="{{ url_for('main.index') }}" class="portal-topbar__site-link">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      View Site
+    </a>
+    <a href="{{ url_for('main.logout') }}" class="portal-topbar__logout">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </a>
+  </div>
+</header>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="portal-flash">
+      {% for category, message in messages %}
+        <div class="portal-flash-msg" style="
+          background: {% if category == 'success' %}#d1fae5{% elif category == 'danger' or category == 'error' %}#fee2e2{% elif category == 'warning' %}#fef3c7{% else %}#dbeafe{% endif %};
+          color: {% if category == 'success' %}#065f46{% elif category == 'danger' or category == 'error' %}#991b1b{% elif category == 'warning' %}#92400e{% else %}#1e40af{% endif %};">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Layout -->
+<div class="portal-layout">
+  <!-- Sidebar -->
+  <aside class="portal-sidebar" id="portalSidebar">
+    {% block sidebar %}{% endblock %}
+  </aside>
+
+  <!-- Content -->
+  <main class="portal-main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script>
+  function openSidebar() {
+    document.getElementById('portalSidebar').classList.add('open');
+    document.getElementById('portalBackdrop').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    document.getElementById('portalSidebar').classList.remove('open');
+    document.getElementById('portalBackdrop').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

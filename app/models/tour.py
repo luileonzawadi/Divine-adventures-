@@ -193,6 +193,39 @@ class TourImage(db.Model):
         return f'<TourImage {self.tour_id} #{self.sort_order}>'
 
 
+class CommunityPhoto(db.Model):
+    """Photos displayed in the community gallery section on the homepage."""
+    __tablename__ = 'community_photos'
+
+    id = db.Column(db.Integer, primary_key=True)
+    image_url = db.Column(db.String(500), nullable=False)
+    caption = db.Column(db.String(300))
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    sort_order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def __repr__(self):
+        return f'<CommunityPhoto {self.id}>'
+
+
+class ShopItem(db.Model):
+    """Products displayed in the Devine Shop section on the homepage."""
+    __tablename__ = 'shop_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    price_kes = db.Column(db.Numeric(10, 2), nullable=False, default=0)
+    image_url = db.Column(db.String(500))
+    buy_link = db.Column(db.String(500))
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    sort_order = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def __repr__(self):
+        return f'<ShopItem {self.name}>'
+
+
 class Itinerary(db.Model):
     """Day-by-day tour itinerary."""
     __tablename__ = 'itineraries'

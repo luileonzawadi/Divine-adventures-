@@ -54,8 +54,14 @@ def login():
         if user and user.check_password(password) and user.is_active:
             login_user(user, remember=remember)
             next_page = request.args.get('next')
-            flash(f"Welcome back, {user.first_name}! 👋", "success")
-            return redirect(next_page or url_for('main.index'))
+            if next_page:
+                return redirect(next_page)
+            if user.role == 'admin':
+                return redirect(url_for('admin.dashboard'))
+            elif user.role == 'operator':
+                return redirect(url_for('operator.dashboard'))
+            else:
+                return redirect(url_for('bookings.dashboard'))
         flash("Invalid email or password.", "danger")
 
     return render_template('auth/login.html')
@@ -111,7 +117,9 @@ def register():
 
         login_user(user)
         flash(f"Welcome to Devine Adventures, {first_name}! 🎉", "success")
-        return redirect(url_for('main.index'))
+        if user.role == 'operator':
+            return redirect(url_for('operator.dashboard'))
+        return redirect(url_for('bookings.dashboard'))
 
     return render_template('auth/register.html')
 

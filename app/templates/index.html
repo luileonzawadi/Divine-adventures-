@@ -2,7 +2,98 @@
 
 {% block title %}Devine Adventures — Adventure Awaits{% endblock %}
 
+{% block head %}
+<style>
+/* ── Sticky side nav ── */
+.side-nav {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+.side-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.side-nav__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.side-nav__label {
+  font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.0);
+  background: rgba(10,35,16,0.85);
+  padding: 3px 8px; border-radius: 4px;
+  white-space: nowrap;
+  transition: color 0.2s, opacity 0.2s;
+  opacity: 0;
+  pointer-events: none;
+  letter-spacing: 0.04em;
+}
+.side-nav__item:hover .side-nav__label {
+  color: #fff;
+  opacity: 1;
+}
+.side-nav__item:hover .side-nav__dot,
+.side-nav__item.active .side-nav__dot {
+  background: #E85D04;
+  border-color: #E85D04;
+  transform: scale(1.4);
+}
+
+/* Reduce section padding site-wide */
+.section { padding: var(--space-12) 0 !important; }
+.section--lg { padding: var(--space-16) 0 !important; }
+
+@media (max-width: 900px) { .side-nav { display: none; } }
+</style>
+{% endblock %}
+
 {% block content %}
+
+<!-- Sticky side navigation -->
+<nav class="side-nav" id="sideNav" aria-label="Page sections">
+  <a href="#hero" class="side-nav__item active" data-section="hero">
+    <span class="side-nav__label">Top</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#adventure-calendar" class="side-nav__item" data-section="adventure-calendar">
+    <span class="side-nav__label">Adventures</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#membership" class="side-nav__item" data-section="membership">
+    <span class="side-nav__label">Membership</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#plans" class="side-nav__item" data-section="plans">
+    <span class="side-nav__label">Plans</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#shop" class="side-nav__item" data-section="shop">
+    <span class="side-nav__label">Shop</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#community" class="side-nav__item" data-section="community">
+    <span class="side-nav__label">Community</span>
+    <span class="side-nav__dot"></span>
+  </a>
+  <a href="#contact" class="side-nav__item" data-section="contact">
+    <span class="side-nav__label">Contact</span>
+    <span class="side-nav__dot"></span>
+  </a>
+</nav>
 
 <!-- ============================================
      HERO — Full-screen auto-sliding carousel
@@ -255,10 +346,7 @@
 <!-- ============================================
      SUBSCRIPTION PLANS
      ============================================ -->
-<section class="section" style="background: var(--color-gray-50);">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-subtitle">Subscriptions</span>
+<section class="section" id="plans" style="background: var(--color-gray-50);">
       <h2>Pick Your <span class="text-accent">Plan</span></h2>
       <p>Unlock free and discounted experiences with a Devine Adventures membership.</p>
     </div>
@@ -532,6 +620,27 @@
 
 {% block scripts %}
 <script>
+/* ============================================
+   SIDE NAV SCROLL SPY
+   ============================================ */
+(function() {
+  const items = document.querySelectorAll('.side-nav__item');
+  const sections = ['hero','adventure-calendar','membership','plans','shop','community','contact']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  function onScroll() {
+    const scrollY = window.scrollY + window.innerHeight * 0.4;
+    let current = sections[0];
+    sections.forEach(s => { if (s.offsetTop <= scrollY) current = s; });
+    items.forEach(item => {
+      item.classList.toggle('active', item.dataset.section === current.id);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
 /* ============================================
    HERO CAROUSEL — Auto-advance every 5s
    ============================================ */

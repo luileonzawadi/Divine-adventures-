@@ -205,6 +205,20 @@
   </main>
 </div>
 
+<!-- Portal Footer -->
+<footer style="background:#f1f5f1; border-top:1px solid #e9ecef; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Devine Adventures" style="height:28px; width:auto; opacity:0.7;">
+    <span style="font-size:12px; color:#9CA3AF;">&copy; {{ current_year }} Devine Adventures</span>
+  </div>
+  <div style="display:flex; gap:16px;">
+    <a href="{{ url_for('main.index') }}" style="font-size:12px; color:#6B7280; text-decoration:none;" onmouseover="this.style.color='#1F6C36'" onmouseout="this.style.color='#6B7280'">View Site</a>
+    <a href="{{ url_for('main.index') }}#contact" style="font-size:12px; color:#6B7280; text-decoration:none;" onmouseover="this.style.color='#1F6C36'" onmouseout="this.style.color='#6B7280'">Support</a>
+    <a href="#" style="font-size:12px; color:#6B7280; text-decoration:none;" onmouseover="this.style.color='#1F6C36'" onmouseout="this.style.color='#6B7280'">Privacy Policy</a>
+  </div>
+  <span style="font-size:11px; color:#9CA3AF;">Developed by <a href="https://teklora.co.ke" target="_blank" rel="noopener noreferrer" style="color:#1F6C36; font-weight:600;">Teklora Solutions</a></span>
+</footer>
+
 <script>
   function openSidebar() {
     document.getElementById('portalSidebar').classList.add('open');

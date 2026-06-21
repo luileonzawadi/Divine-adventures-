@@ -459,45 +459,39 @@ h6 { font-size: var(--text-lg); }
   flex-shrink: 0;
   margin-left: var(--space-2);
 }
+/* ── Mini popup dropdown ── */
+.navbar__hamburger-wrap { position: relative; }
 
-/* Mini popup dropdown — positioned fixed so it escapes navbar stacking context */
 .navbar__mini-popup {
-  position: fixed;
-  top: calc(var(--navbar-top-offset) + 70px);
-  right: 1.5rem;
-  width: 240px;
-  background: var(--color-white);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.22);
-  padding: var(--space-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  opacity: 0;
-  transform: translateY(-8px) scale(0.97);
-  pointer-events: none;
-  transition: opacity var(--transition-base), transform var(--transition-base);
-  z-index: 9999;
-}
-
-.navbar__mini-popup::before {
-  content: '';
+  display: none;
   position: absolute;
-  top: -6px;
-  right: 14px;
-  width: 12px;
-  height: 12px;
-  background: var(--color-white);
-  transform: rotate(45deg);
-  border-radius: 2px;
-  box-shadow: -2px -2px 4px rgba(0,0,0,0.06);
+  top: calc(100% + 8px);
+  right: 0;
+  left: auto;
+  width: 260px;
+  max-width: calc(100vw - 1rem);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.24);
+  padding: 12px;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 99999;
+  box-sizing: border-box;
 }
 
 .navbar__mini-popup.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: all;
+  display: flex;
 }
+
+
+
+/* Mini popup dropdown — positioned fixed so it escapes navbar stacking context */
+
+
+
+
+
 
 .navbar__mini-link {
   font-family: var(--font-heading);
@@ -3473,23 +3467,10 @@ html, body {
 }
 
 /* Constrain mini popup to screen on all devices */
-.navbar__mini-popup {
-  position: fixed !important;
-  top: 75px !important;
-  right: 1rem !important;
-  left: auto !important;
-  width: 260px !important;
-  max-width: calc(100vw - 2rem) !important;
-  box-sizing: border-box !important;
-}
+
 
 @media (max-width: 480px) {
-  .navbar__mini-popup {
-    right: 0.5rem !important;
-    left: 0.5rem !important;
-    width: auto !important;
-    max-width: calc(100vw - 1rem) !important;
-  }
+  
 }
 
 /* Navbar constrained on mobile */
@@ -3607,15 +3588,7 @@ html, body {
   }
 
   /* Mini popup — drops below navbar, stays in screen */
-  .navbar__mini-popup {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    right: 0 !important;
-    left: auto !important;
-    width: 240px !important;
-    max-width: calc(100vw - 2rem) !important;
-    box-sizing: border-box !important;
-  }
+  
 }
 
 /* ============================================
@@ -3778,22 +3751,7 @@ html, body {
     position: relative !important;
   }
 
-  .navbar__mini-popup {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    right: 0 !important;
-    left: auto !important;
-    width: 260px !important;
-    max-width: calc(100vw - 1rem) !important;
-    z-index: 99999 !important;
-    display: none;
-    opacity: 1;
-    transform: none;
-    pointer-events: all;
-  }
+  
 
-  .navbar__mini-popup.open {
-    display: flex !important;
-    flex-direction: column !important;
-  }
+  
 }

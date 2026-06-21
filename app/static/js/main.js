@@ -46,64 +46,41 @@ function initNavbar() {
 function initMobileMenu() {
   const hamburger = document.getElementById('navbar-hamburger');
   const miniPopup  = document.getElementById('navbar-mini-popup');
-  const mobileMenu = document.getElementById('mobile-menu');
   const closeBtn   = document.getElementById('mobile-close');
+  const mobileMenu = document.getElementById('mobile-menu');
   if (!hamburger || !miniPopup) return;
 
   let isOpen = false;
 
   function openPopup() {
     isOpen = true;
-    miniPopup.style.cssText = [
-      'display: flex',
-      'flex-direction: column',
-      'position: absolute',
-      'top: calc(100% + 8px)',
-      'right: 0',
-      'width: 260px',
-      'max-width: calc(100vw - 1rem)',
-      'background: #ffffff',
-      'border-radius: 12px',
-      'box-shadow: 0 8px 40px rgba(0,0,0,0.22)',
-      'padding: 12px',
-      'z-index: 99999',
-      'gap: 4px',
-      'opacity: 1',
-      'pointer-events: all',
-      'transform: none',
-    ].join(';');
+    miniPopup.classList.add('open');
     hamburger.classList.add('active');
     hamburger.setAttribute('aria-expanded', 'true');
   }
 
   function closePopup() {
     isOpen = false;
-    miniPopup.style.display = 'none';
+    miniPopup.classList.remove('open');
     hamburger.classList.remove('active');
     hamburger.setAttribute('aria-expanded', 'false');
   }
-
-  // Start hidden
-  miniPopup.style.display = 'none';
 
   hamburger.addEventListener('click', (e) => {
     e.stopPropagation();
     isOpen ? closePopup() : openPopup();
   });
 
-  // Close when clicking outside
   document.addEventListener('click', (e) => {
     if (isOpen && !hamburger.closest('.navbar__hamburger-wrap').contains(e.target)) {
       closePopup();
     }
   });
 
-  // Close on link click
   miniPopup.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => closePopup());
   });
 
-  // Side drawer close button
   if (closeBtn && mobileMenu) {
     closeBtn.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -111,7 +88,6 @@ function initMobileMenu() {
     });
   }
 
-  // Close on Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePopup();
   });

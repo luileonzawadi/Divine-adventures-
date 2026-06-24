@@ -10,6 +10,68 @@ from sqlalchemy.exc import OperationalError
 scheduler = APScheduler()
 
 
+def auto_seed(app):
+    """Create default accounts on first deploy if the database is empty."""
+    with app.app_context():
+        try:
+            from app.models.user import User, TourOperator
+            if User.query.first():
+                return  # already seeded — do nothing
+
+            print("[auto_seed] No users found — seeding default accounts...")
+
+            # Admin
+            admin = User(
+                email='admin@devine.com', username='admin',
+                first_name='Admin', last_name='Boss',
+                phone='+254733333333', role='admin'
+            )
+            admin.set_password('password')
+            db.session.add(admin)
+
+            # Operator user
+            operator_user = User(
+                email='operator@devine.com', username='operator',
+                first_name='Alice', last_name='Operator',
+                phone='+254722222222', role='operator'
+            )
+            operator_user.set_password('password')
+            db.session.add(operator_user)
+            db.session.flush()
+
+            # Operator profile
+            op_profile = TourOperator(
+                user_id=operator_user.id,
+                company_name='Devine Adventure Guides',
+                description='Professional local guides and trekking experts in Kenya.',
+                license_number='OP-294029',
+                location='Nairobi, Kenya',
+                website='www.devineadventures.co.ke',
+                is_verified=True,
+                rating=4.9,
+                total_tours=0
+            )
+            db.session.add(op_profile)
+
+            # Default traveler
+            traveler = User(
+                email='traveler@devine.com', username='traveler',
+                first_name='John', last_name='Traveler',
+                phone='+254712345678', role='traveler'
+            )
+            traveler.set_password('password')
+            db.session.add(traveler)
+
+            db.session.commit()
+            print("[auto_seed] Done! Default accounts created.")
+            print("[auto_seed]   admin@devine.com    / password")
+            print("[auto_seed]   operator@devine.com / password")
+            print("[auto_seed]   traveler@devine.com / password")
+        except Exception as e:
+            db.session.rollback()
+            print(f"[auto_seed] Skipped: {e}")
+
+
 def ensure_review_columns(app):
     """Ensure all tables have required columns in SQLite."""
     if not app.config.get('SQLALCHEMY_DATABASE_URI', '').startswith('sqlite:'):
@@ -93,11 +155,12 @@ def create_app(config_name=None):
     app.register_blueprint(admin_bp)
     app.register_blueprint(reviews_bp)
 
-    # Create tables in development and ensure schema updates for old SQLite databases
+    # Create tables and auto-seed default accounts if DB is empty
     with app.app_context():
         from app import models  # noqa: F401 — ensure models are imported
         db.create_all()
         ensure_review_columns(app)
+        auto_seed(app)
 
     # Register scheduled jobs
     from app.utils.scheduler import run_review_request_job

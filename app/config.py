@@ -31,8 +31,12 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Production configuration."""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-    
+    _db_url = os.environ.get('DATABASE_URL', '')
+    # Render provides postgres:// but SQLAlchemy requires postgresql://
+    if _db_url.startswith('postgres://'):
+        _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = _db_url or 'sqlite:///devine_adventures.db'
+
     @classmethod
     def init_app(cls, app):
         Config.init_app(app)
